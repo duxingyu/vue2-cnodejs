@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+
+vscode配置文件
+.vscode
+jsconfig.json
+
+eslint配置
+.eslintignore
+.eslintrc.json
+
