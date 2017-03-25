@@ -1,14 +1,16 @@
 <template>
+<div 
+  id="app" 
+  @click="toggleBar(true)">
+  <app-bar 
+    :show="bar" 
+    @hide="toggleBar"></app-bar>
+  <!--内容区-->
   <div 
-    id="app" 
-    @click="toggleBar(true)">
-    <app-bar :show="bar" @hide="toggleBar"></app-bar>
-    <!--内容区-->
-    <div 
-      class="g-ct">
-      <router-view></router-view>
-    </div>
+    class="g-ct">
+    <router-view></router-view>
   </div>
+</div>
 </template>
 
 <script>
@@ -18,7 +20,6 @@ export default {
   name: 'app',
   data() {
     return {
-      prompt: false,
       bar: false,
     };
   },
