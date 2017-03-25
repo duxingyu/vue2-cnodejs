@@ -41,3 +41,20 @@ body {
   opacity: 0.9;
 }
 
+.u-desc-title {
+  height: 40px;
+  line-height: 40px;
+  background: #474a4f;
+  font: 18px/40px SimHei;
+  color: #fff;
+  border-radius: 10px 10px 0 0;
+  padding-left: 20px;
+}
+@media all and (max-width: 800px) {
+  .u-desc-title {
+    border-radius: 0;
+  }
+  .u-publish .ct {
+    padding: 10px;
+  }
+}

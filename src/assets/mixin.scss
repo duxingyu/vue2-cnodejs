@@ -1,0 +1,46 @@
+// mixin
+
+$bl: #474a4f;
+$re: #ff5252;
+$ff: "Microsoft Yahei", serif, sans-serif;
+
+// 设置宽高
+@mixin wh($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+// 行高与高相等
+@mixin hl($height, $lineheight: $height) {
+  height: $height;
+  line-height: $lineheight;
+}
+
+@mixin fc($fontsize, $color) {
+  font-size: $fontsize;
+  color: $color;
+}
+
+@mixin tag() {
+  &.top::before {
+    content: "置顶";
+    background: $re;
+  }
+  &.good::before {
+    content: "精华";
+    background: #e67e22;
+  }
+  &.share::before {
+    content: "分享";
+    background: #1abc9c;
+  }
+  &.ask::before {
+    content: "问答";
+    background: #03a9f4;
+  }
+  &.job::before {
+    content: "招聘";
+    background: #9b59b6;
+  }
+}
+
