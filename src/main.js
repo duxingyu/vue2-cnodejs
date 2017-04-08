@@ -2,6 +2,9 @@ import Vue from 'vue';
 import router from './router/router';
 import store from './store/index';
 import App from './App';
+import axios from 'axios';
+
+Vue.prototype.$http = axios;
 
 import './assets/css/reset.css';
 import './assets/css/common.css';

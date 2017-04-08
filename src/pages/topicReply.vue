@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import appPrompt from '../components/appPrompt';
 import { error } from '../assets/utils';
 
@@ -56,7 +55,7 @@ export default {
         accesstoken: this.token,
         content: this.content + tail,
       };
-      axios.post(`https://cnodejs.org/api/v1/topic/${this.id}/replies`, data).then(res => {
+      this.$http.post(`https://cnodejs.org/api/v1/topic/${this.id}/replies`, data).then(res => {
         this.$emit('refresh');
         this.send = 'before';
         this.content = '';

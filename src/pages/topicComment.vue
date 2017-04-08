@@ -61,7 +61,6 @@
 <script>
 import { getTime, error } from '../assets/utils';
 import appPrompt from '../components/appPrompt';
-import axios from 'axios';
 
 export default {
   name: 'topicComment',
@@ -122,7 +121,7 @@ export default {
         return;
       }
 
-      axios.post(`https://cnodejs.org/api/v1/reply/${val.id}/ups`, {
+      this.$http.post(`https://cnodejs.org/api/v1/reply/${val.id}/ups`, {
         accesstoken: this.user.token,
       }).then(res => res.data.action === 'up' ? val.ups.push(this.user.id) : val.ups.pop())
         .catch(err => error(err, this));
@@ -160,7 +159,7 @@ export default {
 
         data.content = `[${name}](/user/${name.split('@')[1]})` + data.content.split(name)[1] + tail;
       }
-      axios.post('https://cnodejs.org/api/v1//topic/588a959b1dc8ff8739cbc66d/replies', data).then(res => {
+      this.$http.post('https://cnodejs.org/api/v1//topic/588a959b1dc8ff8739cbc66d/replies', data).then(res => {
         this.$emit('refresh');
         this.send = 'before';
         data.content = '';

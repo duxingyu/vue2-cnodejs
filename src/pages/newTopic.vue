@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import appHeader from '../components/appHeader';
 import appPrompt from '../components/appPrompt';
 import { error } from '../assets/utils';
@@ -80,7 +79,7 @@ export default {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
-      axios.post('https://cnodejs.org/api/v1/topics', this.data).then(res => {
+      this.$http.post('https://cnodejs.org/api/v1/topics', this.data).then(res => {
         this.$router.push(`/topic/${res.data.data.topic_id}`);
       })
       .catch(err => {

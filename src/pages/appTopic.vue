@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import appUtils from '../components/appUtils';
 import appHeader from '../components/appHeader';
 import appPrompt from '../components/appPrompt';
@@ -71,7 +70,7 @@ export default {
     getData() {
       let url = this.topicId;
       url = this.user ? `${url}?accesstoken=${this.user.token}` : url;
-      axios.get(`https://cnodejs.org/api/v1/topic/${url}`)
+      this.$http.get(`https://cnodejs.org/api/v1/topic/${url}`)
         .then(res => this.d = res.data.data)
         .catch(err => error(err, this));
     },

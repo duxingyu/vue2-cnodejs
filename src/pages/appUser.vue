@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { getTime, error } from '../assets/utils';
 import appUtils from '../components/appUtils';
 import appHeader from '../components/appHeader';
@@ -68,7 +67,7 @@ export default {
     },
     getTopic() {
       const url = 'https://cnodejs.org/api/v1' + this.$route.path;
-      axios.get(url)
+      this.$http.get(url)
         .then(res => {
           this.d = res.data.data;
           this.info.splice(0);
@@ -80,7 +79,7 @@ export default {
     },
     getCollect() {
       const url = `https://cnodejs.org/api/v1/topic_collect/${this.d.loginname}`;
-      axios.get(url)
+      this.$http.get(url)
         .then(res => {
           this.info.push(res.data.data);
           this.finish = true;

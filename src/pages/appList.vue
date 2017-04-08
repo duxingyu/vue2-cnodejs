@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import appHeader from '../components/appHeader';
 import appUtils from '../components/appUtils';
 import appPrompt from '../components/appPrompt';
@@ -97,7 +96,7 @@ export default {
       const tab = this.crtTag === 'home' ? '' : `&tab=${this.crtTag}`;
 
       const url = `https://cnodejs.org/api/v1/topics?page=${this.page}&limit=${this.limit}${tab}`;
-      axios.get(url)
+      this.$http.get(url)
         .then(res => {
           this.d.push(...res.data.data);
           ++this.page;

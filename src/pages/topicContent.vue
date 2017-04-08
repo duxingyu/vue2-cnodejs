@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { getTime, getTag, error } from '../assets/utils';
 import appPrompt from '../components/appPrompt';
 
@@ -57,7 +56,7 @@ export default {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
-      axios.post(`https://cnodejs.org/api/v1/topic_collect/${state ? 'de_collect' : 'collect'}`, {
+      this.$http.post(`https://cnodejs.org/api/v1/topic_collect/${state ? 'de_collect' : 'collect'}`, {
         accesstoken: this.token,
         topic_id: this.data.id,
       }).then(res => {

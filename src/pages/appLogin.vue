@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { error } from '../assets/utils';
 import appHeader from '../components/appHeader';
 import appPrompt from '../components/appPrompt';
@@ -56,7 +55,7 @@ export default {
         this.prompt = true;
         return;
       }
-      axios.post('https://cnodejs.org/api/v1/accesstoken', {
+      this.$http.post('https://cnodejs.org/api/v1/accesstoken', {
         accesstoken: this.token,
       }).then(res => {
         const user = {
