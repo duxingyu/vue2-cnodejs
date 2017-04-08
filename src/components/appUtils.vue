@@ -1,24 +1,24 @@
 <template>
-  <transition name="utils">
-    <ul class="u-utils">
-      <!--回到顶部-->
-      <transition name="top">
-        <li class="item" v-if="pos">
-          <i 
-            @click="top"
-            class="material-icons top">
-            arrow_upward</i>
-        </li>
-      </transition>
-      <!--发表话题-->
-      <li class="item">
+<transition name="utils">
+  <ul class="u-utils">
+    <!--回到顶部-->
+    <transition name="top">
+      <li class="item" v-if="pos">
         <i 
-          @click="edit"
-          class="material-icons edit">
-          edit</i>
+          @click="top"
+          class="material-icons top">
+          arrow_upward</i>
       </li>
-    </ul>
-  </transition>
+    </transition>
+    <!--发表话题-->
+    <li class="item">
+      <i 
+        @click="edit"
+        class="material-icons edit">
+        edit</i>
+    </li>
+  </ul>
+</transition>
 </template>
 
 <script>

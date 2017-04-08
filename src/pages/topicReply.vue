@@ -1,21 +1,21 @@
 <template>
-  <div class="m-topic-reply">
-    <p class="u-desc-title">添加回复</p>
-    <div class="u-publish">
-      <textarea 
-        v-model="content"
-        placeholder="支持markdown语法格式"
-        class="ct"></textarea>
-      <button 
-        type="button"
-        @click="subReply" 
-        class="submit">提交</button>
-    </div>
-    <app-prompt 
-      :show="prompt" 
-      :text="promptText" 
-      @close="hide"></app-prompt>    
+<div class="m-topic-reply">
+  <p class="u-desc-title">添加回复</p>
+  <div class="u-publish">
+    <textarea 
+      v-model="content"
+      placeholder="支持markdown语法格式"
+      class="ct"></textarea>
+    <button 
+      type="button"
+      @click="subReply" 
+      class="submit">提交</button>
   </div>
+  <app-prompt 
+    :show="prompt" 
+    :text="promptText" 
+    @close="hide"></app-prompt>    
+</div>
 </template>
 
 <script>

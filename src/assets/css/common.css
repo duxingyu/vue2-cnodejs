@@ -1,34 +1,40 @@
 body {
   font-family: "Microsoft Yahei", serif, sans-serif;
 }
+
 .load {
   height: 100vh;
   background: url(../img/loading.gif) no-repeat 50% 45%;
 }
+
 .ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .clearfix {
   zoom: 1;
 }
+
 .clearfix::after {
   display: block;
   clear: both;
   content: " ";
 }
 
-.u-publish  .ct {
+.u-publish .ct {
   width: 100%;
   padding: 20px;
   font-size: 14px;
   border-radius: 5px;
 }
+
 .u-publish .ct:focus {
   border: 1px solid #ff5252;
   box-shadow: 1px 1px 10px rgba(255, 82, 82, 0.2), 5px 5px 21px rgba(255, 82, 82, 0.1);
 }
+
 .u-publish .submit {
   background: #ff5252;
   color: #fff;
@@ -37,6 +43,7 @@ body {
   border-bottom: 3px solid #d32f2f;
   border-radius: 5px;
 }
+
 .u-publish .submit:hover {
   opacity: 0.9;
 }
@@ -50,6 +57,7 @@ body {
   border-radius: 10px 10px 0 0;
   padding-left: 20px;
 }
+
 @media all and (max-width: 800px) {
   .u-desc-title {
     border-radius: 0;

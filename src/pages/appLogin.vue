@@ -1,24 +1,24 @@
 <template>
-  <div class="m-login">
-    <app-header title="登录"></app-header>
-    <input
-      class="inp" 
-      type="text" 
-      autofocus
-      placeholder="请输入36位accesstoken"
-      @keyup.enter="post"
-      v-model="token">
-    <button 
-      type="button" 
-      class="submit"
-      @click="post">
-      提交
-    </button>
-    <app-prompt 
-      :show="prompt" 
-      :text="promptText" 
-      @close="hide"></app-prompt>
-  </div>
+<div class="m-login">
+  <app-header title="登录"></app-header>
+  <input
+    class="inp" 
+    type="text" 
+    autofocus
+    placeholder="请输入36位accesstoken"
+    @keyup.enter="post"
+    v-model="token">
+  <button 
+    type="button" 
+    class="submit"
+    @click="post">
+    提交
+  </button>
+  <app-prompt 
+    :show="prompt" 
+    :text="promptText" 
+    @close="hide"></app-prompt>
+</div>
 </template>
 
 <script>

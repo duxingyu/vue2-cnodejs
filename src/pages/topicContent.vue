@@ -1,37 +1,37 @@
 <template>
-  <div class="m-topic-ct" v-if="data.title">
-    <div class="intro">
-      <h2 class="title" :class="getTag(data)">{{ data.title }}</h2>
-      <div class="author clearfix">
-        <router-link :to="`/user/${data.author.loginname}`">
-          <img
-            :src="data.author.avatar_url" 
-            :alt="data.author.loginname">
-        </router-link>
-        <div class="desc">
-          <p class="name">{{ data.author.loginname }}</p>
-          <p>
-            <span>发布于&nbsp;{{ getTime(data.create_at) }}</span>&nbsp;
-            <span>阅读&nbsp;{{ data.visit_count }}</span>&nbsp;
-            <span>评论&nbsp;{{ data.reply_count }}</span>
-          </p>
-        </div>
-        <p
-          v-if="token" 
-          :class="{cancel: data.is_collect}"
-          @click="changeCollect(data.is_collect)"
-          class="collect">
-          {{ data.is_collect ? '取消收藏' : '收藏' }}
+<div class="m-topic-ct" v-if="data.title">
+  <div class="intro">
+    <h2 class="title" :class="getTag(data)">{{ data.title }}</h2>
+    <div class="author clearfix">
+      <router-link :to="`/user/${data.author.loginname}`">
+        <img
+          :src="data.author.avatar_url" 
+          :alt="data.author.loginname">
+      </router-link>
+      <div class="desc">
+        <p class="name">{{ data.author.loginname }}</p>
+        <p>
+          <span>发布于&nbsp;{{ getTime(data.create_at) }}</span>&nbsp;
+          <span>阅读&nbsp;{{ data.visit_count }}</span>&nbsp;
+          <span>评论&nbsp;{{ data.reply_count }}</span>
         </p>
       </div>
+      <p
+        v-if="token" 
+        :class="{cancel: data.is_collect}"
+        @click="changeCollect(data.is_collect)"
+        class="collect">
+        {{ data.is_collect ? '取消收藏' : '收藏' }}
+      </p>
     </div>
-    <div class="body markdown-body" v-html="data.content">
-    </div>
-    <app-prompt 
-      :show="prompt" 
-      :text="promptText" 
-      @close="hide"></app-prompt>
   </div>
+  <div class="body markdown-body" v-html="data.content">
+  </div>
+  <app-prompt 
+    :show="prompt" 
+    :text="promptText" 
+    @close="hide"></app-prompt>
+</div>
 </template>
 
 <script>

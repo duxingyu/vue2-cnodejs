@@ -1,32 +1,32 @@
 <template>
-  <div 
-    class="g-topic" 
-    @click="linkJump" 
-    :class="{load: !loaded}">
-      <app-header title="主题"></app-header>
-    <!--文章内容及简介-->
-    <topic-content 
-      :token="user ? user.token : null"
-      @finish="loaded = !loaded"
-      :data="d"></topic-content>
-      <!--文章评论-->
-    <topic-comment
-      v-if="d.reply_count"
-      :user="user"
-      :id="topicId"
-      :data="d" ></topic-comment>
-      <!--回复-->
-    <topic-reply
-      v-if="user && loaded"
-      :token="user ? user.token : null"
-      :id="topicId"
-      @refresh="getData"></topic-reply>
-      <app-utils></app-utils>
-    <app-prompt 
-      :show="prompt" 
-      :text="promptText" 
-      @close="hide"></app-prompt> 
-  </div>
+<div 
+  class="g-topic" 
+  @click="linkJump" 
+  :class="{load: !loaded}">
+    <app-header title="主题"></app-header>
+  <!--文章内容及简介-->
+  <topic-content 
+    :token="user ? user.token : null"
+    @finish="loaded = !loaded"
+    :data="d"></topic-content>
+    <!--文章评论-->
+  <topic-comment
+    v-if="d.reply_count"
+    :user="user"
+    :id="topicId"
+    :data="d" ></topic-comment>
+    <!--回复-->
+  <topic-reply
+    v-if="user && loaded"
+    :token="user ? user.token : null"
+    :id="topicId"
+    @refresh="getData"></topic-reply>
+    <app-utils></app-utils>
+  <app-prompt 
+    :show="prompt" 
+    :text="promptText" 
+    @close="hide"></app-prompt> 
+</div>
 </template>
 
 <script>

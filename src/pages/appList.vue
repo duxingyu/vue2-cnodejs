@@ -1,45 +1,45 @@
 <template>
-  <div>
-    <app-header :title="title[crtTag]"></app-header>
-    <ul class="m-list">
-      <li class="item" v-for="item of d">
-        <h3 class="title ellipsis">
-          <router-link 
-            :to="`/topic/${item.id}`"
-            :class="getTag(item, crtTag)"
-            :title="item.title"
-          >{{ item.title }}</router-link>
-        </h3>
-        <div class="content">
-          <router-link 
-            :to="`/user/${item.author.loginname}`" 
-            class="author">
-            <img 
-              :src="item.author.avatar_url" 
-              :title="item.author.loginname">
-            <p class="desc">
-              <span>{{ item.author.loginname }}</span><br/>
-              <span>{{ getTime(item.create_at) }}</span>
-            </p>
-          </router-link>
-          <div class="detail">
-            <p><span class="reply">{{ item.reply_count }}</span>&nbsp;/
-            <span class="visit">{{ item.visit_count }}</span></p>
-            <p class="last-reply">{{getTime(item.last_reply_at)}}</p>
-          </div>
+<div>
+  <app-header :title="title[crtTag]"></app-header>
+  <ul class="m-list">
+    <li class="item" v-for="item of d">
+      <h3 class="title ellipsis">
+        <router-link 
+          :to="`/topic/${item.id}`"
+          :class="getTag(item, crtTag)"
+          :title="item.title"
+        >{{ item.title }}</router-link>
+      </h3>
+      <div class="content">
+        <router-link 
+          :to="`/user/${item.author.loginname}`" 
+          class="author">
+          <img 
+            :src="item.author.avatar_url" 
+            :title="item.author.loginname">
+          <p class="desc">
+            <span>{{ item.author.loginname }}</span><br/>
+            <span>{{ getTime(item.create_at) }}</span>
+          </p>
+        </router-link>
+        <div class="detail">
+          <p><span class="reply">{{ item.reply_count }}</span>&nbsp;/
+          <span class="visit">{{ item.visit_count }}</span></p>
+          <p class="last-reply">{{getTime(item.last_reply_at)}}</p>
         </div>
-      </li>
-      <infinite-loading 
-        :on-infinite="getList" 
-        ref="infiniteLoading">
-      </infinite-loading>
-    </ul>
-    <app-utils></app-utils>
-    <app-prompt 
-      :show="prompt" 
-      :text="promptText" 
-      @close="hide"></app-prompt>
-  </div>
+      </div>
+    </li>
+    <infinite-loading 
+      :on-infinite="getList" 
+      ref="infiniteLoading">
+    </infinite-loading>
+  </ul>
+  <app-utils></app-utils>
+  <app-prompt 
+    :show="prompt" 
+    :text="promptText" 
+    @close="hide"></app-prompt>
+</div>
 </template>
 
 <script>

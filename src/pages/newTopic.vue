@@ -1,38 +1,38 @@
 <template>
-  <div class="m-new-topic u-publish" @click="fold = false">
-    <app-header title="新建主题"></app-header>
-    <div class="select">
-      <p class="desc">选择分类：</p>
-      <div class="selfalse">
-        <p 
-          class="result"
-          @click.stop="fold = !fold">{{ text }}</p>
-        <div class="option" :class="{show: fold}">
-          <p
-            v-for="item of options"
-            @click.stop="select(item)"
-            v-text="item.text"></p>
-        </div>
+<div class="m-new-topic u-publish" @click="fold = false">
+  <app-header title="新建主题"></app-header>
+  <div class="select">
+    <p class="desc">选择分类：</p>
+    <div class="selfalse">
+      <p 
+        class="result"
+        @click.stop="fold = !fold">{{ text }}</p>
+      <div class="option" :class="{show: fold}">
+        <p
+          v-for="item of options"
+          @click.stop="select(item)"
+          v-text="item.text"></p>
       </div>
     </div>
-    <input 
-      v-model="data.title"
-      type="text" 
-      placeholder="标题字数 10字以上"
-      class="title">
-    <textarea 
-      class="ct"
-      v-model="data.content"
-      placeholder="支持markdown语法格式"></textarea>
-    <button 
-      type="button"
-      @click="addArticle"
-      class="submit">发布</button>
-    <app-prompt 
-      :show="prompt" 
-      :text="promptText" 
-      @close="hide"></app-prompt>
   </div>
+  <input 
+    v-model="data.title"
+    type="text" 
+    placeholder="标题字数 10字以上"
+    class="title">
+  <textarea 
+    class="ct"
+    v-model="data.content"
+    placeholder="支持markdown语法格式"></textarea>
+  <button 
+    type="button"
+    @click="addArticle"
+    class="submit">发布</button>
+  <app-prompt 
+    :show="prompt" 
+    :text="promptText" 
+    @close="hide"></app-prompt>
+</div>
 </template>
 
 <script>
