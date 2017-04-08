@@ -3,11 +3,11 @@ function getTime(time, format) {
     return time.split(/T|\..+/, 2).join(' ');
   }
   const minutes = (new Date() - new Date(time)) / 60000;
-  let hours = minutes / 60;
-  let days = hours / 24;
-  let weeks = days / 7;
-  let months = weeks / 4;
-  let years = months / 12;
+  const hours = minutes / 60;
+  const days = hours / 24;
+  const weeks = days / 7;
+  const months = weeks / 4;
+  const years = months / 12;
   if (minutes < 60) {
     return `${Math.floor(minutes) > 0 ? Math.floor(minutes) : 0} 分钟前`;
   } else if (hours < 24) {

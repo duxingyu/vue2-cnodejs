@@ -1,61 +1,62 @@
 <template>
-  <div class="m-topic-comment">
-    <p class="u-desc-title">
-      {{ data.reply_count }}条回复
-    </p>
-    <ol 
-      class="body"
-      @click="evProxy($event)">
-      <li 
-        class="item clearfix"
-        v-for="(val, index) of data.replies"
-        :class="{author: isAuthor(val.author.loginname)}"
-        :key="index">
-        <div class="info">
-          <router-link :to="`/user/${val.author.loginname}`">
-            <img
-            :src="val.author.avatar_url" 
-            :alt="val.author.loginname">
-          </router-link>
-          <span class="user">
-            {{val.author.loginname}}
-            {{index + 1}}楼&nbsp;{{getTime(val.create_at)}}
-          </span>
-          <span class="other">
-            <i 
-              :class="{ups:isUps(val.ups)}"
-              class="material-icons"
-              @click="ups(val, index)">thumb_up</i>
-            {{ val.ups.length || '' }}
-            <i 
-              class="material-icons"
-              @click="reply(val, index)">comment</i>
-          </span>
+<div class="m-topic-comment">
+  <p class="u-desc-title">
+    {{ data.reply_count }}条回复
+  </p>
+  <ol 
+    class="body"
+    @click="evProxy($event)">
+    <li 
+      class="item clearfix"
+      v-for="(val, index) of data.replies"
+      :class="{author: isAuthor(val.author.loginname)}"
+      :key="index">
+      <div class="info">
+        <router-link :to="`/user/${val.author.loginname}`">
+          <img
+          :src="val.author.avatar_url" 
+          :alt="val.author.loginname">
+        </router-link>
+        <span class="user">
+          {{val.author.loginname}}
+          {{index + 1}}楼&nbsp;{{getTime(val.create_at)}}
+        </span>
+        <span class="other">
+          <i 
+            :class="{ups:isUps(val.ups)}"
+            class="material-icons"
+            @click="ups(val, index)">thumb_up</i>
+          {{ val.ups.length || '' }}
+          <i 
+            class="material-icons"
+            @click="reply(val, index)">comment</i>
+        </span>
+      </div>
+      <div class="content">
+        <p class="main markdown-body" v-html="dealRouter(val.content)"></p>
+        <div 
+          class="reply u-publish" 
+          v-if="replyShow[index]" 
+          :key="val.id">
+          <textarea 
+            v-model="replyData.content"
+            placeholder="支持markdown语法格式"
+            @keyup.enter="subReply"
+            :ref="`area${index}`"
+            class="ct"></textarea><br>
+          <button 
+            type="button"
+            @click="subReply"
+            class="submit">提交</button>
         </div>
-        <div class="content">
-          <p class="main markdown-body" v-html="dealRouter(val.content)"></p>
-          <div 
-            class="reply u-publish" 
-            v-if="replyShow[index]" 
-            :key="val.id">
-            <textarea 
-              v-model="replyData.content"
-              placeholder="支持markdown语法格式"
-              @keyup.enter="subReply"
-              class="ct"></textarea><br>
-            <button 
-              type="button"
-              @click="subReply"
-              class="submit">提交</button>
-          </div>
-        </div>
-      </li>
-    </ol>
-    <app-prompt 
-      :show="prompt" 
-      :text="promptText" 
-      @close="hide"></app-prompt>
-  </div>
+      </div>
+    </li>
+  </ol>
+  <app-prompt 
+    :show="prompt" 
+    :text="promptText" 
+    @close="hide"></app-prompt>
+</div>
 </template>
 
 <script>
@@ -139,6 +140,8 @@ export default {
       this.replyShow.splice(index, 1, show);
       this.replyData.reply_id = val.id;
       this.replyData.content = this.replyName = `@${val.author.loginname} `;
+
+      setTimeout(() => this.$refs[`area${index}`][0].focus(), 0);
     },
     subReply() {
       if (this.send === 'loading') return;
