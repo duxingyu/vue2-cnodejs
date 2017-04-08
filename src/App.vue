@@ -47,9 +47,7 @@ export default {
   height: 100%;
 }
 .g-ct {
-  position: absolute;
-  top: 64px;
-  left: 0;
+  margin-top: 64px;
   width: 100%;
 }
 </style>
