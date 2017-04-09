@@ -23,8 +23,8 @@
         </span>
         <span class="other">
           <i 
-            :class="{ups:isUps(val.ups)}"
             class="material-icons"
+            :class="{ups:isUps(val.ups)}"
             @click="ups(val, index)">thumb_up</i>
           {{ val.ups.length || '' }}
           <i 
@@ -39,15 +39,15 @@
           v-if="replyShow[index]" 
           :key="val.id">
           <textarea 
+            class="ct"
             v-model="replyData.content"
             placeholder="支持markdown语法格式"
             @keyup.enter="subReply"
-            :ref="`area${index}`"
-            class="ct"></textarea><br>
+            :ref="`area${index}`"></textarea><br>
           <button 
             type="button"
-            @click="subReply"
-            class="submit">提交</button>
+            class="submit"
+            @click="subReply">提交</button>
         </div>
       </div>
     </li>
@@ -111,10 +111,7 @@ export default {
       return loginname === this.data.author.loginname;
     },
     isUps(val) {
-      if (this.user) {
-        return val.indexOf(this.user.id) !== -1;
-      }
-      return false;
+      return this.user ? val.includes(this.user.id) : false;
     },
     ups(val) {
       if (!this.user) {
@@ -257,11 +254,8 @@ export default {
       padding: 10px 10px 0 10px;
     }
     .content .u-publish {
-      .ct {
+      .ct, .submit {
       width: 100%;
-      }
-      .submit {
-        width: 100%;
       }
     } 
   }

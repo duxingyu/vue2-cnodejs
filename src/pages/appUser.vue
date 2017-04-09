@@ -73,9 +73,7 @@ export default {
           this.info.splice(0);
           this.info.push(this.d.recent_replies, this.d.recent_topics);
           this.getCollect();
-        }).catch(err => {
-          console.log(err);
-        });
+        }).catch(err => error(err, this));
     },
     getCollect() {
       const url = `https://cnodejs.org/api/v1/topic_collect/${this.d.loginname}`;
@@ -83,8 +81,7 @@ export default {
         .then(res => {
           this.info.push(res.data.data);
           this.finish = true;
-        })
-        .catch(err => error(err, this));
+        }).catch(err => error(err, this));
     },
     getTime,
   },

@@ -7,13 +7,13 @@
     <dt>源码地址</dt>
     <dd>
       <a href="https://github.com/duxingyu/vue2-cnodejs" target="blank">
-        <img src="../assets/img/github.svg" alt="">
-        https://github.com/duxingyu/vue2-cnodejs
+        <img src="../assets/img/github.svg" alt="github">
+        <em>https://github.com/duxingyu/vue2-cnodejs</em>
       </a>。
     </dd>
     <dt>其他</dt>
     <dd>如果没有Accesstoken(登录用)，可以使用
-      <span>aabc3938-ad2f-40c4-aa7c-d4f36181b62a</span>
+      <em>aabc3938-ad2f-40c4-aa7c-d4f36181b62a</em>
       进行登录。
     </dd>
   </dl>
@@ -53,16 +53,11 @@ export default {
       width: 20px;
       vertical-align: text-bottom;
     }
-    span {
-      font-weight: bold;
-    }
   }
 }
 @media all and (max-width: 500px) {
   .m-about {
-    .m-about {
-      padding: 10px;
-    }
+    padding: 10px;
   }
 }
 </style>

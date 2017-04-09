@@ -3,13 +3,13 @@
   <p class="u-desc-title">添加回复</p>
   <div class="u-publish">
     <textarea 
+      class="ct"
       v-model="content"
-      placeholder="支持markdown语法格式"
-      class="ct"></textarea>
+      placeholder="支持markdown语法格式"></textarea>
     <button 
       type="button"
-      @click="subReply" 
-      class="submit">提交</button>
+      class="submit"
+      @click="subReply">提交</button>
   </div>
   <app-prompt 
     :show="prompt" 

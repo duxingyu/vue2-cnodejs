@@ -128,8 +128,8 @@ export default {
         border-top: 5px solid $bl;
       }
       p {
-        @include hl(40px, 38px);
         position: relative;
+        @include hl(40px, 38px);
         padding-left: 10px;
         cursor: pointer;
       }

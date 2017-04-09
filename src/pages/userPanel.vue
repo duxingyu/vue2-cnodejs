@@ -13,7 +13,7 @@
         v-if="data.githubUsername"
         target="blank" 
         :href="`https://github.com/${data.githubUsername}`">
-        <img src="../assets/img/github.svg" alt="">@{{ data.githubUsername }}
+        <img src="../assets/img/github.svg" alt="github">@{{ data.githubUsername }}
       </a>
     </p>
     <p class="score">积分：<span>{{ data.score }}</span></p>

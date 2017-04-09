@@ -56,9 +56,6 @@ export default {
       d: [],
       page: 1,
       limit: 20,
-      lastTag: 'home',
-      crtTag: 'home',
-      send: 'before',
       title: {
         home: '首页',
         good: '精华',
@@ -66,6 +63,9 @@ export default {
         share: '分享',
         job: '招聘',
       },
+      lastTag: 'home',
+      crtTag: 'home',
+      send: 'before',
       prompt: false,
       promptText: '',
     };

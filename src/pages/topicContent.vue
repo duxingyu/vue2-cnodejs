@@ -17,10 +17,10 @@
         </p>
       </div>
       <p
+        class="collect"
         v-if="token" 
         :class="{cancel: data.is_collect}"
-        @click="changeCollect(data.is_collect)"
-        class="collect">
+        @click="changeCollect(data.is_collect)">
         {{ data.is_collect ? '取消收藏' : '收藏' }}
       </p>
     </div>

@@ -66,10 +66,10 @@ export default {
         };
         this.$store.store.commit('setUser', user);
 
-        if (window.localStorage) {
-          localStorage.setItem('user', JSON.stringify(user));
+        const storage = window.localStorage;
+        if (storage) {
+          storage.setItem('user', JSON.stringify(user));
         }
-        window.a = res;
         this.$router.go(-1);
       }).catch(err => error(err, this));
     },
@@ -106,7 +106,7 @@ export default {
     border-right: 2px solid #d32f2f;
     border-bottom: 3px solid #d32f2f;
     border-radius: 5px;
-    font: 20px/40px SimHei;
+    font: 20px/2 SimHei;
     &:hover {
       opacity: 0.9;
     }

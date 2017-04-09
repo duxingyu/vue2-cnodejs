@@ -46,23 +46,21 @@ $h: 64px;
   }
   .more {
     float: right;
-    @include wh(64px);
-    line-height: 64px;
+    @include wh($h);
+    line-height: $h;
     cursor: pointer;
   }
   h2 {
     position: absolute;
     left: $h;
     top: 0;
-    font: normal 18px/64px $ff;
+    font: normal 18px/#{$h} $ff;
     color: #fff;
   }
 }
 @media all and (max-width: 500px) {
-  .u-header {
-    .logo img {
-      display: none;
-    }
+  .u-header .logo img {
+    display: none;
   }
 }
 </style>

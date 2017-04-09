@@ -28,12 +28,13 @@ export default {
     return {
       token: null,
       pos: false,
+      w: window,
     };
   },
   created() {
     const user = this.$store.store.state.user;
     if (user) this.token = user.token;
-    window.addEventListener('scroll', this.scroll);
+    this.w.addEventListener('scroll', this.scroll);
   },
   methods: {
     edit() {
@@ -43,11 +44,11 @@ export default {
       }
     },
     scroll() {
-      this.pos = window.scrollY > 500;
+      this.pos = this.w.scrollY > 500;
     },
     top() {
       // 0.5s
-      const w = window;
+      const w = this.w;
       const v = w.scrollY / 10;
       this.pos = false;
       w.removeEventListener('scroll', this.scroll);
@@ -79,11 +80,7 @@ export default {
     margin-top: 5px;
     background: $re;
     border-radius: 50%;
-    text-align: center;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.157647), 5px 5px 21px rgba(0, 0, 0, 0.157647);
-    a {
-      display: block;
-    }
     i {
       position: relative;
       color: #fff;
