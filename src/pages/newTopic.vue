@@ -11,7 +11,8 @@
         <p
           v-for="item of options"
           @click.stop="select(item)"
-          v-text="item.text"></p>
+          v-text="item.text"
+          :key="item.text"></p>
       </div>
     </div>
   </div>
@@ -45,11 +46,7 @@ export default {
   data() {
     return {
       fold: false,
-      options: [
-        {text: '问答', tab: 'ask'},
-        {text: '分享', tab: 'share'},
-        {text: '招聘', tab: 'job'},
-      ],
+      options: [{ text: '问答', tab: 'ask' }, { text: '分享', tab: 'share' }, { text: '招聘', tab: 'job' }],
       text: '请选择',
       data: {
         tab: '',
@@ -79,13 +76,15 @@ export default {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
-      this.$http.post('https://cnodejs.org/api/v1/topics', this.data).then(res => {
-        this.$router.push(`/topic/${res.data.data.topic_id}`);
-      })
-      .catch(err => {
-        error(err, this);
-        this.send = 'before';
-      });
+      this.$http
+        .post('https://cnodejs.org/api/v1/topics', this.data)
+        .then(res => {
+          this.$router.push(`/topic/${res.data.data.topic_id}`);
+        })
+        .catch(err => {
+          error(err, this);
+          this.send = 'before';
+        });
     },
     hide() {
       this.prompt = false;
@@ -120,7 +119,7 @@ export default {
       border-radius: 5px;
       background: #fff;
       &::after {
-        content: "";
+        content: '';
         position: absolute;
         top: 18px;
         right: 10px;
@@ -141,14 +140,14 @@ export default {
         background: #fff;
         border-radius: 5px;
         border: 1px solid #000;
-        transition: .3s;
+        transition: 0.3s;
         &.show {
-          transition: .3s;
+          transition: 0.3s;
           height: 120px;
           visibility: visible;
         }
         p:hover {
-          background: rgba(0,0,0,0.1);
+          background: rgba(0, 0, 0, 0.1);
         }
       }
     }

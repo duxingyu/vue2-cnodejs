@@ -44,7 +44,7 @@ export default {
       text-decoration: underline;
     }
     dt {
-      font: bold 20px/3 $ff; 
+      font: bold 20px/3 $ff;
     }
     dd {
       font: 16px/24px $ff;

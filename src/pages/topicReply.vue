@@ -55,15 +55,17 @@ export default {
         accesstoken: this.token,
         content: this.content + tail,
       };
-      this.$http.post(`https://cnodejs.org/api/v1/topic/${this.id}/replies`, data).then(res => {
-        this.$emit('refresh');
-        this.send = 'before';
-        this.content = '';
-      })
-      .catch(err => {
-        error(err, this);
-        this.send = 'before';
-      });
+      this.$http
+        .post(`https://cnodejs.org/api/v1/topic/${this.id}/replies`, data)
+        .then(() => {
+          this.$emit('refresh');
+          this.send = 'before';
+          this.content = '';
+        })
+        .catch(err => {
+          error(err, this);
+          this.send = 'before';
+        });
     },
   },
 };

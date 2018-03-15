@@ -55,23 +55,26 @@ export default {
         this.prompt = true;
         return;
       }
-      this.$http.post('https://cnodejs.org/api/v1/accesstoken', {
-        accesstoken: this.token,
-      }).then(res => {
-        const user = {
-          token: this.token,
-          loginname: res.data.loginname,
-          id: res.data.id,
-          avatar_url: res.data.avatar_url,
-        };
-        this.$store.store.commit('setUser', user);
+      this.$http
+        .post('https://cnodejs.org/api/v1/accesstoken', {
+          accesstoken: this.token,
+        })
+        .then(res => {
+          const user = {
+            token: this.token,
+            loginname: res.data.loginname,
+            id: res.data.id,
+            avatar_url: res.data.avatar_url,
+          };
+          this.$store.store.commit('setUser', user);
 
-        const storage = window.localStorage;
-        if (storage) {
-          storage.setItem('user', JSON.stringify(user));
-        }
-        this.$router.go(-1);
-      }).catch(err => error(err, this));
+          const storage = window.localStorage;
+          if (storage) {
+            storage.setItem('user', JSON.stringify(user));
+          }
+          this.$router.go(-1);
+        })
+        .catch(err => error(err, this));
     },
   },
 };

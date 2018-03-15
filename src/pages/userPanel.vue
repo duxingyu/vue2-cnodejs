@@ -45,14 +45,15 @@ export default {
   border: 2px solid $bl;
   padding: 20px 0;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.157647), 5px 5px 40px rgba(0, 0, 0, 0.157647);
-  .user-sim, .user-other {
+  .user-sim,
+  .user-other {
     text-align: center;
   }
   .head {
     @include wh(100px);
     border-radius: 50%;
   }
-  >p {
+  > p {
     text-align: center;
   }
   .name {
@@ -70,7 +71,7 @@ export default {
   .score span {
     color: $re;
   }
-  .score, .collect, .time, .github {
+  .user-other > p {
     font: bold 14px/24px $ff;
   }
 }

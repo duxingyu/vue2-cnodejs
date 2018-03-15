@@ -4,10 +4,10 @@
   <div v-if="finish">
   <user-panel :data="d" :count="info[2].length"></user-panel>
   <div class="info">
-    <div v-for="(v, i) of topic">
+    <div v-for="(v, i) of topic" :key="v">
       <p class="u-desc-title">{{ v }}</p>
       <ul v-if="info[i].length">
-        <li v-for="item of info[i]">
+        <li v-for="item of info[i]" :key="item.author.loginname">
           <router-link :to="`/user/${item.author.loginname}`">
           <img
             :src="item.author.avatar_url" 
@@ -66,27 +66,31 @@ export default {
       this.prompt = false;
     },
     getTopic() {
-      const url = 'https://cnodejs.org/api/v1' + this.$route.path;
-      this.$http.get(url)
+      const url = `https://cnodejs.org/api/v1${this.$route.path}`;
+      this.$http
+        .get(url)
         .then(res => {
           this.d = res.data.data;
           this.info.splice(0);
           this.info.push(this.d.recent_replies, this.d.recent_topics);
           this.getCollect();
-        }).catch(err => error(err, this));
+        })
+        .catch(err => error(err, this));
     },
     getCollect() {
       const url = `https://cnodejs.org/api/v1/topic_collect/${this.d.loginname}`;
-      this.$http.get(url)
+      this.$http
+        .get(url)
         .then(res => {
           this.info.push(res.data.data);
           this.finish = true;
-        }).catch(err => error(err, this));
+        })
+        .catch(err => error(err, this));
     },
     getTime,
   },
   watch: {
-    '$route'(to) {
+    $route(to) {
       if (to.path.includes('/user/')) {
         this.finish = false;
         this.getTopic();
@@ -104,7 +108,7 @@ export default {
   padding: 50px 10%;
   .info {
     margin-left: 230px;
-    >div {
+    > div {
       margin-bottom: 20px;
       background: #fff;
       border: 2px solid $bl;
@@ -154,7 +158,7 @@ export default {
     padding: 0;
     .info {
       margin: 0;
-      >div {
+      > div {
         border-width: 0;
         border-radius: 0;
         margin: 0;

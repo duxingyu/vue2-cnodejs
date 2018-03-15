@@ -12,32 +12,39 @@ Vue.use(Router);
 export default new Router({
   mode: 'history',
   base: __dirname,
-  routes: [{
-    path: '/',
-    name: 'appList',
-    component: appList,
-    alias: '/?tab=home',
-  }, {
-    path: '/topic/:id',
-    name: 'appTopic',
-    component: appTopic,
-  }, {
-    path: '/login',
-    name: 'appLogin',
-    component: appLogin,
-  }, {
-    path: '/user/:id',
-    name: 'appUser',
-    component: appUser,
-  }, {
-    path: '/create',
-    name: 'newTopic',
-    component: newTopic,
-  }, {
-    path: '/about',
-    name: 'about',
-    component: about,
-  }],
+  routes: [
+    {
+      path: '/',
+      name: 'appList',
+      component: appList,
+      alias: '/?tab=home',
+    },
+    {
+      path: '/topic/:id',
+      name: 'appTopic',
+      component: appTopic,
+    },
+    {
+      path: '/login',
+      name: 'appLogin',
+      component: appLogin,
+    },
+    {
+      path: '/user/:id',
+      name: 'appUser',
+      component: appUser,
+    },
+    {
+      path: '/create',
+      name: 'newTopic',
+      component: newTopic,
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: about,
+    },
+  ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition;

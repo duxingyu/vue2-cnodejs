@@ -119,9 +119,11 @@ export default {
         return;
       }
 
-      this.$http.post(`https://cnodejs.org/api/v1/reply/${val.id}/ups`, {
-        accesstoken: this.user.token,
-      }).then(res => res.data.action === 'up' ? val.ups.push(this.user.id) : val.ups.pop())
+      this.$http
+        .post(`https://cnodejs.org/api/v1/reply/${val.id}/ups`, {
+          accesstoken: this.user.token,
+        })
+        .then(res => (res.data.action === 'up' ? val.ups.push(this.user.id) : val.ups.pop()))
         .catch(err => error(err, this));
     },
     hide() {
@@ -136,14 +138,14 @@ export default {
       const show = !this.replyShow[index];
       this.replyShow.splice(index, 1, show);
       this.replyData.reply_id = val.id;
-      this.replyData.content = this.replyName = `@${val.author.loginname} `;
+      this.replyName = `@${val.author.loginname} `;
+      this.replyData.content = this.replyName;
 
       setTimeout(() => this.$refs[`area${index}`][0].focus(), 0);
     },
     subReply() {
       if (this.send === 'loading') return;
       this.send = 'loading';
-
 
       const data = this.replyData;
       const name = this.replyName;
@@ -156,18 +158,19 @@ export default {
       const tail = '来自 [vue2-cnodejs](https://duxy1995.coding.me/)';
 
       if (data.content.indexOf(name) === 0) {
-
-        data.content = `[${name}](/user/${name.split('@')[1]})` + data.content.split(name)[1] + tail;
+        data.content = `[${name}](/user/${name.split('@')[1]})${data.content.split(name)[1]}${tail}`;
       }
-      this.$http.post('https://cnodejs.org/api/v1//topic/588a959b1dc8ff8739cbc66d/replies', data).then(res => {
-        this.$emit('refresh');
-        this.send = 'before';
-        data.content = '';
-      })
-      .catch(err => {
-        error(err, this);
-        this.send = 'before';
-      });
+      this.$http
+        .post('https://cnodejs.org/api/v1//topic/588a959b1dc8ff8739cbc66d/replies', data)
+        .then(() => {
+          this.$emit('refresh');
+          this.send = 'before';
+          data.content = '';
+        })
+        .catch(err => {
+          error(err, this);
+          this.send = 'before';
+        });
     },
     getTime,
   },
@@ -194,7 +197,7 @@ export default {
         background: #e8f5e9;
       }
       .name::before {
-        content: "作者";
+        content: '作者';
         margin-right: 5px;
         color: $re;
         border: 1px solid $re;
@@ -255,9 +258,9 @@ export default {
     }
     .content .u-publish {
       .ct, .submit {
-      width: 100%;
+        width: 100%;
       }
-    } 
+    }
   }
 }
 .markdown-link {

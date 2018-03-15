@@ -2,7 +2,7 @@
 <div>
   <app-header :title="title[crtTag]"></app-header>
   <ul class="m-list">
-    <li class="item" v-for="item of d">
+    <li class="item" v-for="item of d" :key="item.id">
       <h3 class="title ellipsis">
         <router-link 
           :to="`/topic/${item.id}`"
@@ -43,11 +43,11 @@
 </template>
 
 <script>
+import InfiniteLoading from 'vue-infinite-loading';
 import appHeader from '../components/appHeader';
 import appUtils from '../components/appUtils';
 import appPrompt from '../components/appPrompt';
 import { getTime, getTag, error } from '../assets/utils';
-import infiniteLoading from 'vue-infinite-loading';
 
 export default {
   name: 'appList',
@@ -74,11 +74,12 @@ export default {
     appHeader,
     appUtils,
     appPrompt,
-    infiniteLoading,
+    InfiniteLoading,
   },
   created() {
     const tab = this.$route.query.tab;
-    this.crtTag = this.lastTag = tab || 'home';
+    this.lastTag = tab || 'home';
+    this.crtTag = this.lastTag;
   },
   methods: {
     hide() {
@@ -96,13 +97,15 @@ export default {
       const tab = this.crtTag === 'home' ? '' : `&tab=${this.crtTag}`;
 
       const url = `https://cnodejs.org/api/v1/topics?page=${this.page}&limit=${this.limit}${tab}`;
-      this.$http.get(url)
+      this.$http
+        .get(url)
         .then(res => {
           this.d.push(...res.data.data);
           ++this.page;
           this.send = 'before';
           this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
-        }).catch(err => {
+        })
+        .catch(err => {
           this.send = 'before';
           error(err, this);
         });
@@ -111,7 +114,7 @@ export default {
     getTag,
   },
   watch: {
-    '$route'(to, from) {
+    $route(to, from) {
       if (to.path === '/') {
         this.crtTag = to.query.tab || 'home';
         this.lastTag = from.query.tab || 'home';
@@ -125,80 +128,92 @@ export default {
 <style lang="scss">
 @import '../assets/mixin';
 
-.m-list {
-  position: relative;
-  width: 100%;
-  .item {
-    @include wh(100%, 90px);
-    padding: 10px 20px;
-    background: #fff;
-    border-bottom: 1px solid #ccc;
-  }
-  .title {
-    width: 100%;
-    cursor: pointer;
-    font: bold 16px/24px $ff;
-    a {
-      &::before {
-        display: inline-block;
-        @include wh(40px, 20px);
-        margin: 2px 5px 2px 0;
-        text-align: center;
-        border-radius: 3px;
-        color: #fff;
-        font: normal 12px/20px $ff;
-      }
-      @include tag;
+.m-list
+{
+    position: relative;  width: 100%;
+    .item
+    { padding: 10px 20px;  border-bottom: 1px solid #ccc;
+ background: #fff; 
+
+        @include wh(100%, 90px); 
     }
-    &:hover a {
-      color: $re;
-      text-decoration: underline;
+    .title
+    { font: bold 16px/24px $ff;
+
+        width: 100%;  cursor: pointer; 
+        a
+        {
+            @include tag;
+            &::before
+            { font: normal 12px/20px $ff;
+
+                display: inline-block;
+ margin: 2px 5px 2px 0;  text-align: center;  color: #fff;  border-radius: 3px; 
+@include wh(40px, 20px); 
+            }
+        }
+        &:hover a
+        { text-decoration: underline;
+
+            color: $re; 
+        }
     }
-  }
-  .content {
-    height: 46px;
-    padding-top: 6px;
-  }
-  .author {
-    float: left;
-    height: 40px;
-    img {
-      float: left;
-      @include wh(40px);
-      border-radius: 50%;
+    .content
+    {
+        height: 46px;  padding-top: 6px;
     }
-    .desc {
-      float: left;
-      margin-left: 10px;
-      span {
-        @include fc(12px, #616161);
-        line-height: 20px;
-      }
+    .author
+    {
+        float: left;  height: 40px;
+        img
+        {
+            float: left;
+ border-radius: 50%;
+
+@include wh(40px); 
+        }
+        .desc
+        {
+            float: left;  margin-left: 10px;
+            span
+            { line-height: 20px;
+
+                @include fc(12px, #616161); 
+            }
+        }
     }
-  }
-  .detail {
-    float: right;
-    font: 12px/20px $ff;
-    p {
-      text-align: right;
+    .detail
+    { font: 12px/20px $ff;
+
+        float: right; 
+        p
+        {
+            text-align: right;
+        }
+        .reply
+        { font-weight: bold;
+
+            color: $re; 
+        }
+        .visit
+        {
+            color: #333;
+        }
+        .last-reply
+        {
+            color: #616161;
+        }
     }
-    .reply {
-      color: $re;
-      font-weight: bold;
-    }
-    .visit {
-      color: #333;
-    }
-    .last-reply {
-      color: #616161;
-    }
-  }
 }
-@media all and (max-width: 500px) {
-  .m-list {
-    .item {
-      padding: 10px;
+@media all and (max-width: 500px)
+{
+    .m-list
+    {
+        .item
+        {
+            padding: 10px;
+        }
     }
-  }
 }
+
 </style>

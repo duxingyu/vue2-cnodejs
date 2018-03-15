@@ -70,8 +70,9 @@ export default {
     getData() {
       let url = this.topicId;
       url = this.user ? `${url}?accesstoken=${this.user.token}` : url;
-      this.$http.get(`https://cnodejs.org/api/v1/topic/${url}`)
-        .then(res => this.d = res.data.data)
+      this.$http
+        .get(`https://cnodejs.org/api/v1/topic/${url}`)
+        .then(res => (this.d = res.data.data))
         .catch(err => error(err, this));
     },
     // 如果为外部链接，则打开新窗口

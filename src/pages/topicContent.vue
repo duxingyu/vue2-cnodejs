@@ -56,13 +56,17 @@ export default {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
-      this.$http.post(`https://cnodejs.org/api/v1/topic_collect/${state ? 'de_collect' : 'collect'}`, {
-        accesstoken: this.token,
-        topic_id: this.data.id,
-      }).then(res => {
-        this.data.is_collect = !state;
-        this.send = 'before';
-      })
+      this.$http
+        .post(
+          `https://cnodejs.org/api/v1/topic_collect/${state ? 'de_collect' : 'collect'}`,
+          {
+            accesstoken: this.token,
+            topic_id: this.data.id,
+          })
+        .then(() => {
+          this.data.is_collect = !state;
+          this.send = 'before';
+        })
         .catch(err => {
           this.send = 'before';
           error(err, this);
@@ -91,7 +95,7 @@ export default {
   margin-bottom: 30px;
   .intro {
     padding-bottom: 20px;
-    }
+  }
   .title {
     font: bold 20px/1.5 $ff;
     padding: 10px 0;
@@ -123,7 +127,7 @@ export default {
         cursor: pointer;
         color: #000;
         &::before {
-          content: "作者";
+          content: '作者';
           margin-right: 10px;
           @include wh(30px, 14px);
           border: 1px solid $re;
