@@ -1,4 +1,5 @@
 <template>
+<!-- 顶栏下方错误提示组件 -->
 <div class="u-prompt" :class="{show: show}">
   <div class="prompt-ct" :class="{show: show}">
     <i class="material-icons">error</i>
@@ -10,8 +11,10 @@
 <script>
 export default {
   name: 'appPrompt',
+  // 错误提示文本，显示
   props: ['text', 'show'],
   watch: {
+    // 1.5s后错误提示消失
     show() {
       if (this.show) {
         setTimeout(() => {
@@ -40,11 +43,11 @@ $h: 40px;
     padding: 0 $h/2;
     height: $h;
     border-radius: $h/2;
-    background: rgba(255,73,73,0.8);    
-    font: 14px/#{$h} $ff;
+    background: rgba(255, 73, 73, 0.8);
+    font: 14px /#{$h} $ff;
     color: #fff;
     transform: translate(0, 0);
-    transition: .3s;
+    transition: 0.3s;
     i {
       font-size: 20px;
       vertical-align: text-bottom;
@@ -54,7 +57,7 @@ $h: 40px;
     visibility: visible;
     .prompt-ct {
       transform: translate(0, 40px);
-      transition: .3s;
+      transition: 0.3s;
     }
   }
 }

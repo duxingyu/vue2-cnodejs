@@ -1,21 +1,16 @@
 <template>
+<!-- 回到顶部、发表话题组件 -->
 <transition name="utils">
   <ul class="u-utils">
     <!--回到顶部-->
     <transition name="top">
       <li class="item" v-if="pos">
-        <i 
-          @click="top"
-          class="material-icons top">
-          arrow_upward</i>
+        <i @click="top" class="material-icons top">arrow_upward</i>
       </li>
     </transition>
     <!--发表话题-->
     <li class="item">
-      <i 
-        @click="edit"
-        class="material-icons edit">
-        edit</i>
+      <i @click="edit" class="material-icons edit">edit</i>
     </li>
   </ul>
 </transition>
@@ -26,21 +21,21 @@ export default {
   name: 'appUtils',
   data() {
     return {
-      token: null,
+      user: null,
       pos: false,
       w: window,
     };
   },
   created() {
-    const user = this.$store.store.state.user;
-    if (user) this.token = user.token;
+    this.user = this.$store.store.state.user;
     this.w.addEventListener('scroll', this.scroll);
   },
   methods: {
     edit() {
-      this.$router.push('/create');
-      if (!this.token) {
-        this.$router.push('/login');
+      // 如果未登录，登录后会跳转到发表主题页
+      this.$router.push({ name: 'newTopic' });
+      if (!this.user) {
+        this.$router.push({ name: 'appLogin' });
       }
     },
     scroll() {
@@ -49,6 +44,7 @@ export default {
     top() {
       // 0.5s
       const w = this.w;
+      // 速度
       const v = w.scrollY / 10;
       this.pos = false;
       w.removeEventListener('scroll', this.scroll);
@@ -77,6 +73,7 @@ export default {
   z-index: 100;
   .item {
     @include wh(40px);
+    text-align: center;
     margin-top: 5px;
     background: $re;
     border-radius: 50%;
@@ -102,27 +99,31 @@ export default {
       &:hover {
         color: #000;
         &::before {
-          transition: .3s;
+          transition: 0.3s;
           visibility: visible;
           background: rgba(0, 0, 0, 0.7);
           transform: translate(-10px, 0);
         }
       }
       &.edit::before {
-        content: "发布话题";
+        content: '发布话题';
       }
       &.top::before {
-        content: "回到顶部";
+        content: '回到顶部';
       }
     }
   }
 }
-.utils-enter-active, .utils-leave-active,
-.top-enter-active, .top-leave-active {
-  transition: .5s;
+.utils-enter-active,
+.utils-leave-active,
+.top-enter-active,
+.top-leave-active {
+  transition: 0.5s;
 }
-.utils-enter, .utils-leave-active,
-.top-enter, .top-leave-active {
+.utils-enter,
+.utils-leave-active,
+.top-enter,
+.top-leave-active {
   opacity: 0;
   transform: translate(0, 50px);
 }

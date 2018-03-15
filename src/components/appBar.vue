@@ -1,24 +1,22 @@
 <template>
+<!-- 侧边导航栏组件，默认关闭 -->
 <div class="g-bar">
-  <div 
-    class="menu" 
-    @click.stop="toggle" 
-  >
+  <!-- 左上角切换按钮 -->
+  <div class="menu" @click.stop="toggle">
     <i class="material-icons">menu</i>
   </div>
-  <div 
-    class="wrap" 
+  <!-- 侧边导航覆盖层 -->
+  <div
+    class="wrap"
     @click="toggle"
     :class="{show: show}"
-    @mousewheel.prevent
-    >
+    @mousewheel.prevent>
   <nav class="m-nav" :class="{fold: show}">
+    <!-- 左上角个人简要信息 -->
     <app-self></app-self>
+    <!-- 侧边导航 -->
     <ul class="list">
-      <li 
-        v-for="item of nav" 
-        :key="item.icon" 
-      > 
+      <li v-for="item of nav" :key="item.text">
         <router-link :to="item.router">
         <i class="material-icons">{{item.icon}}</i>
         {{ item.text }}
@@ -50,9 +48,11 @@ export default {
   components: {
     appSelf,
   },
+  // 侧边栏显示或隐藏
   props: ['show'],
   methods: {
     toggle() {
+      // 点击后隐藏侧边栏
       this.$emit('hide');
     },
   },
@@ -87,13 +87,12 @@ export default {
     z-index: 50;
     @include wh(100%);
     opacity: 0;
-    transition: .3s;
+    transition: 0.3s;
     background: rgba(0, 0, 0, 0.3);
     &.show {
       opacity: 1;
       visibility: visible;
     }
-
   }
 }
 .m-nav {
@@ -103,9 +102,9 @@ export default {
   top: 0;
   left: 0;
   background: #fff;
-  transition: transform .3s;
+  transition: transform 0.3s;
   transform: translate(-200px, 0);
-  box-shadow: 5px 1px 6px rgba(0,0,0,.117647), 0 1px 4px rgba(0,0,0,.117647);
+  box-shadow: 5px 1px 6px rgba(0, 0, 0, 0.117647), 0 1px 4px rgba(0, 0, 0, 0.117647);
   &.fold {
     transform: translate(0, 0);
   }
@@ -123,7 +122,7 @@ export default {
       padding-right: 20px;
       vertical-align: text-bottom;
     }
-    &:hover{
+    &:hover {
       background: $bl;
       a {
         color: #fff;

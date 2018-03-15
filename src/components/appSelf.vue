@@ -1,22 +1,24 @@
 <template>
+<!-- 侧边导航栏上方用户简要信息组件 -->
 <div class="m-nav-log">
+  <!-- 登录状态 -->
   <div class="in" v-if="user">
+    <!-- 用户头像，点击后进入用户页 -->
     <div class="head">
-      <router-link :to="`/user/${user.loginname}`">
-        <img 
-          :src="user.avatar_url" 
-          :alt="user.loginname">
+      <router-link :to="{ name: 'appUser', params: { userId: user.loginname } }">
+        <img :src="user.avatar_url" :alt="user.loginname">
       </router-link>
+      <!-- 用户名 -->
       <p class="name">{{user.loginname}}</p>
     </div>
-    <div
-      class="exit" 
-      @click="exitLogin">
+    <!-- 退出登录按钮 -->
+    <div class="exit" @click="exitLogin">
       <i class="material-icons">exit_to_app</i>
     </div>
   </div>
+  <!-- 未登录状态，点击进入登录页 -->
   <div class="out" v-else>
-    <router-link to="/login">
+    <router-link to="{ name: 'appLogin' }">
       <i class="material-icons">account_circle</i>
     </router-link>
   </div>
@@ -41,14 +43,16 @@ export default {
     exitLogin() {
       this.$store.store.commit('setUser', null);
       this.isLogin();
+
       const storage = window.localStorage;
       if (storage.user) {
         storage.removeItem('user');
       }
     },
   },
+  // $$
   watch: {
-    '$route'(to, from) {
+    $route(to, from) {
       if (from.path === '/login') {
         this.isLogin();
       }
@@ -64,7 +68,8 @@ export default {
   position: relative;
   @include wh(200px, 140px);
   background: $re;
-  .head, .out {
+  .head,
+  .out {
     @include wh(100px);
     padding: 20px 0 0 20px;
   }
