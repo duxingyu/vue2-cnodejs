@@ -1,14 +1,19 @@
 .DS_Store
 node_modules/
-dist/
-npm-debug.log
-yarn-error.log
-
-vscode配置文件
-.vscode
-jsconfig.json
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 eslint配置
 .eslintignore
-.eslintrc.json
+.eslintrc.js
 
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+jsconfig.json
