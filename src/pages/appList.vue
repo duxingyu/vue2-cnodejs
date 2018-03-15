@@ -29,10 +29,7 @@
         </div>
       </div>
     </li>
-    <infinite-loading 
-      :on-infinite="getList" 
-      ref="infiniteLoading">
-    </infinite-loading>
+    <infinite-loading @infinite="getList"></infinite-loading>
   </ul>
   <app-utils></app-utils>
   <app-prompt 
@@ -85,7 +82,7 @@ export default {
     hide() {
       this.prompt = false;
     },
-    getList() {
+    getList($state) {
       if (this.send === 'loding') return;
       this.send = 'loding';
 
@@ -103,7 +100,7 @@ export default {
           this.d.push(...res.data.data);
           ++this.page;
           this.send = 'before';
-          this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+          $state.loaded();
         })
         .catch(err => {
           this.send = 'before';
@@ -128,92 +125,81 @@ export default {
 <style lang="scss">
 @import '../assets/mixin';
 
-.m-list
-{
-    position: relative;  width: 100%;
-    .item
-    { padding: 10px 20px;  border-bottom: 1px solid #ccc;
- background: #fff; 
-
-        @include wh(100%, 90px); 
+.m-list {
+    position: relative;
+    width: 100%;
+    .item { 
+      padding: 10px 20px;  
+      border-bottom: 1px solid #ccc;
+      background: #fff; 
+      @include wh(100%, 90px); 
     }
-    .title
-    { font: bold 16px/24px $ff;
-
-        width: 100%;  cursor: pointer; 
-        a
-        {
-            @include tag;
-            &::before
-            { font: normal 12px/20px $ff;
-
-                display: inline-block;
- margin: 2px 5px 2px 0;  text-align: center;  color: #fff;  border-radius: 3px; 
-@include wh(40px, 20px); 
-            }
+    .title { 
+      font: bold 16px/24px $ff;
+      width: 100%;  
+      cursor: pointer; 
+      a {
+        @include tag;
+        &::before { 
+          font: normal 12px/20px $ff;
+          display: inline-block;
+          margin: 2px 5px 2px 0;  
+          text-align: center;  
+          color: #fff;  
+          border-radius: 3px; 
+          @include wh(40px, 20px); 
         }
-        &:hover a
-        { text-decoration: underline;
-
-            color: $re; 
-        }
+      }
+      &:hover a { 
+        text-decoration: underline;
+        color: $re; 
+      }
     }
-    .content
-    {
-        height: 46px;  padding-top: 6px;
+    .content {
+      height: 46px;  
+      padding-top: 6px;
     }
-    .author
-    {
-        float: left;  height: 40px;
-        img
-        {
-            float: left;
- border-radius: 50%;
-
-@include wh(40px); 
+    .author {
+      float: left;  
+      height: 40px;
+      img {
+        float: left;
+        border-radius: 50%;
+        @include wh(40px); 
+      }
+      .desc {
+        float: left;  
+        margin-left: 10px;
+        span { 
+          line-height: 20px;
+          @include fc(12px, #616161); 
         }
-        .desc
-        {
-            float: left;  margin-left: 10px;
-            span
-            { line-height: 20px;
-
-                @include fc(12px, #616161); 
-            }
-        }
+      }
     }
-    .detail
-    { font: 12px/20px $ff;
-
-        float: right; 
-        p
-        {
-            text-align: right;
-        }
-        .reply
-        { font-weight: bold;
-
-            color: $re; 
-        }
-        .visit
-        {
-            color: #333;
-        }
-        .last-reply
-        {
-            color: #616161;
-        }
+  .detail { 
+    font: 12px/20px $ff;
+    float: right; 
+    p {
+      text-align: right;
     }
+    .reply {
+      font-weight: bold;
+      color: $re; 
+    }
+    .visit {
+      color: #333;
+    }
+    .last-reply {
+      color: #616161;
+    }
+  }
 }
-@media all and (max-width: 500px)
-{
-    .m-list
-    {
-        .item
-        {
-            padding: 10px;
-        }
+@media all and (max-width: 500px) {
+  .m-list {
+    .item {
+      padding: 10px;
     }
+  }
 }
 
 </style>
