@@ -1,22 +1,23 @@
 <template>
+<!-- 登录页 -->
 <div class="m-login">
   <app-header title="登录"></app-header>
   <input
-    class="inp" 
-    type="text" 
-    autofocus
-    placeholder="请输入36位accesstoken"
-    @keyup.enter="post"
+    type="text"
+    v-focus
+    placeholder="请输入36位 accesstoken"
+    @keyup.enter="post(token)"
     v-model="token">
-  <button 
-    type="button" 
-    class="submit"
-    @click="post">
-    提交
-  </button>
-  <app-prompt 
-    :show="prompt" 
-    :text="promptText" 
+  <button type="button" class="submit" @click="post(token)">提交</button>
+  <p class="tip">
+    <span>提示：</span>
+    如果没有accesstoken，可以点击
+    <a @click.prevent="post(defaultToken)">这里</a>
+    进行登录。
+  </p>
+  <app-prompt
+    :show="prompt"
+    :text="promptText"
     @close="hide"></app-prompt>
 </div>
 </template>
@@ -31,6 +32,7 @@ export default {
   data() {
     return {
       token: '',
+      defaultToken: 'aabc3938-ad2f-40c4-aa7c-d4f36181b62a',
       prompt: false,
       promptText: '',
     };
@@ -40,39 +42,52 @@ export default {
     appPrompt,
   },
   created() {
+    // 当用户已经登录，跳转到用户信息页面
     const user = this.$store.store.state.user;
     if (user) {
       this.$router.replace(`/user/${user.loginname}`);
     }
   },
+  // 自动获取焦点，autofocus不清楚为什么不管用
+  directives: {
+    focus: {
+      inserted(el) {
+        el.focus();
+      },
+    },
+  },
   methods: {
     hide() {
       this.prompt = false;
     },
-    post() {
-      if (this.token.length !== 36) {
-        this.promptText = '请输入36位accesstoken';
+    setUser(userInfo) {
+      this.$store.store.commit('setUser', userInfo);
+
+      // 如果使用的是defaultToken，选择sessionStorage，否则为localStorage
+      const storage = window[userInfo.token === this.defaultToken ? 'sessionStorage' : 'localStorage'];
+      if (storage) {
+        storage.setItem('user', JSON.stringify(userInfo));
+      }
+      this.$router.go(-1);
+    },
+    post(accesstoken) {
+      const token = accesstoken.trim();
+      if (token.length !== 36) {
+        this.promptText = '请输入36位 accesstoken';
         this.prompt = true;
         return;
       }
       this.$http
-        .post('https://cnodejs.org/api/v1/accesstoken', {
-          accesstoken: this.token,
-        })
+        .post('https://cnodejs.org/api/v1/accesstoken', { accesstoken: token })
         .then(res => {
+          const data = res.data;
           const user = {
-            token: this.token,
-            loginname: res.data.loginname,
-            id: res.data.id,
-            avatar_url: res.data.avatar_url,
+            token,
+            loginname: data.loginname,
+            id: data.id,
+            avatar_url: data.avatar_url,
           };
-          this.$store.store.commit('setUser', user);
-
-          const storage = window.localStorage;
-          if (storage) {
-            storage.setItem('user', JSON.stringify(user));
-          }
-          this.$router.go(-1);
+          this.setUser(user);
         })
         .catch(err => error(err, this));
     },
@@ -84,41 +99,48 @@ export default {
 @import '../assets/mixin';
 
 .m-login {
-  background: #fff;
-  margin: 40px 20px;
-  .inp {
+  margin: 84px 20px;
+  input {
     border: none;
     width: 100%;
-    height: 50px;
-    padding: 18px;
-    font-size: 14px;
+    font: 18px/50px $ff;
     border-bottom: 2px solid $re;
     margin-bottom: 30px;
-    background: #fff;
-    border-radius: 10px 10px 0 0;
-    &:focus {
-      background: #fff;
-    }
+    caret-color: $re;
   }
   .submit {
-    width: 100%;
-    height: 40px;
+    @include wh(100%, 40px);
     background: $re;
     color: #fff;
     border: none;
     border-right: 2px solid #d32f2f;
     border-bottom: 3px solid #d32f2f;
     border-radius: 5px;
-    font: 20px/2 SimHei;
+    font: 20px/2 $ff;
+    letter-spacing: 8px;
     &:hover {
       opacity: 0.9;
+    }
+  }
+  .tip {
+    font: 16px/24px $ff;
+    margin-top: 20px;
+    a {
+      color: $re;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    span,
+    a {
+      font-weight: bold;
     }
   }
 }
 @media all and (max-width: 800px) {
   .m-login {
     margin: 10px;
-    .inp {
+    input {
       margin-bottom: 20px;
     }
   }
