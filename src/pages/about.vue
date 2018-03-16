@@ -1,4 +1,5 @@
 <template>
+<!-- 关于项目页面 -->
 <div class="m-about">
   <app-header title="关于"></app-header>
   <dl>
@@ -10,11 +11,6 @@
         <img src="../assets/img/github.svg" alt="github">
         <em>https://github.com/duxingyu/vue2-cnodejs</em>
       </a>。
-    </dd>
-    <dt>其他</dt>
-    <dd>如果没有Accesstoken(登录用)，可以使用
-      <em>aabc3938-ad2f-40c4-aa7c-d4f36181b62a</em>
-      进行登录。
     </dd>
   </dl>
 </div>
@@ -36,9 +32,9 @@ export default {
 
 .m-about {
   padding: 20px;
-  @include wh(100%);
   dl {
-    a, a:hover {
+    text-align: justify;
+    a {
       color: $re;
       font-weight: bold;
       text-decoration: underline;
