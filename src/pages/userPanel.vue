@@ -1,26 +1,33 @@
 <template>
-<div class="m-userpanel clearfix">
-  <div class="user-sim">
-    <img 
-      class="head"
-      :src="data.avatar_url" 
-      :alt="data.loginname">
-    <p class="name">{{ data.loginname }}</p>
+<!-- 用户面板 -->
+<aside class="m-userpanel">
+  <h4 class="u-desc-title">个人信息</h4>
+  <!-- 用户头像及用户名 -->
+  <div class="content">
+    <div class="basic">
+      <img
+        class="avatar"
+        :src="data.avatar_url"
+        :alt="data.loginname">
+      <span class="loginname">{{ data.loginname }}</span>
+    </div>
+    <!-- github地址、积分、注册时间 -->
+    <div class="other">
+      <span class="github">
+        <a
+          v-if="data.githubUsername"
+          target="blank"
+          :href="`https://github.com/${data.githubUsername}`">
+          <img src="../assets/img/github.svg" alt="github">@{{ data.githubUsername }}
+        </a>
+      </span>
+      <span class="score">积分：<span>{{ data.score }}</span></span>
+      <span class="collect"><span>{{ count }}</span> 个话题收藏</span>
+      <span>注册时间：</span>
+      <span class="time">{{getTime(data.create_at, true)}}</span>
+    </div>
   </div>
-  <div class="user-other">
-    <p class="github">
-      <a 
-        v-if="data.githubUsername"
-        target="blank" 
-        :href="`https://github.com/${data.githubUsername}`">
-        <img src="../assets/img/github.svg" alt="github">@{{ data.githubUsername }}
-      </a>
-    </p>
-    <p class="score">积分：<span>{{ data.score }}</span></p>
-    <p class="collect">{{ count }}个话题收藏</p>
-    <p class="time">注册时间：<br>{{getTime(data.create_at, true)}}</p>
-  </div>
-</div>
+</aside>
 </template>
 <script>
 import { getTime } from '../assets/utils';
@@ -38,25 +45,28 @@ export default {
 @import '../assets/mixin';
 
 .m-userpanel {
-  float: left;
-  width: 200px;
-  background: #fff;
-  border-radius: 5px;
-  border: 2px solid $bl;
-  padding: 20px 0;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.157647), 5px 5px 40px rgba(0, 0, 0, 0.157647);
-  .user-sim,
-  .user-other {
-    text-align: center;
+  min-width: 200px;
+  .content {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 0 0 10px 10px;
+    padding: 20px 0;
   }
-  .head {
-    @include wh(100px);
+  .basic,
+  .other {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .other {
+    font: bold 14px/24px $ff;
+  }
+  .avatar {
+    width: 100px;
     border-radius: 50%;
   }
-  > p {
-    text-align: center;
-  }
-  .name {
+  .loginname {
     font: bold 16px/30px $ff;
   }
   .github {
@@ -64,37 +74,38 @@ export default {
       color: #4fc3f7;
     }
     img {
-      @include wh(18px);
+      width: 18px;
       vertical-align: text-bottom;
     }
   }
-  .score span {
+  .score span,
+  .collect span {
     color: $re;
   }
-  .user-other > p {
-    font: bold 14px/24px $ff;
-  }
 }
-@media all and (max-width: 500px) {
+@media all and (max-width: 600px) {
   .m-userpanel {
-    float: none;
     width: 100%;
-    margin: 0;
-    padding: 10px;
-    border: none;
-    background: #fafafa;
-    .user-sim {
-      float: left;
+    min-width: 250px;
+    .content {
+      padding: 10px;
+      border-radius: 0;
+      flex-direction: row;
+      background: #fafafa;
+      box-shadow: $bs;
+    }
+    > h4 {
+      display: none;
+    }
+    .basic {
       width: 40%;
-      .head {
-        @include wh(80px);
+      .avatar {
+        width: 80px;
         margin: 0;
       }
     }
-    .user-other {
-      float: right;
-      width: 60%;
-      text-align: left;
+    .other {
+      align-items: flex-start;
     }
   }
 }
