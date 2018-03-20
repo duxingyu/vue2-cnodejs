@@ -2,7 +2,8 @@
 
 $bl: #474a4f;
 $re: #ff5252;
-$ff: "Microsoft Yahei", serif, sans-serif;
+$ff: 'Microsoft Yahei', serif, sans-serif;
+$bs: 0px 0px 0px rgba(0, 0, 0, 0.157647), 0px 0px 21px rgba(0, 0, 0, 0.157647);
 
 // 设置宽高
 @mixin wh($width, $height: $width) {
@@ -10,37 +11,37 @@ $ff: "Microsoft Yahei", serif, sans-serif;
   height: $height;
 }
 
-// 行高与高相等
-@mixin hl($height, $lineheight: $height) {
-  height: $height;
-  line-height: $lineheight;
-}
-
+// 字体与颜色
 @mixin fc($fontsize, $color) {
   font-size: $fontsize;
   color: $color;
 }
 
+// 字体与行高
+@mixin fl($fontsize, $lineheight) {
+  font-size: $fontsize;
+  line-height: $lineheight;
+}
+
 @mixin tag() {
   &.top::before {
-    content: "置顶";
+    content: '置顶';
     background: $re;
   }
   &.good::before {
-    content: "精华";
+    content: '精华';
     background: #e67e22;
   }
   &.share::before {
-    content: "分享";
+    content: '分享';
     background: #1abc9c;
   }
   &.ask::before {
-    content: "问答";
+    content: '问答';
     background: #03a9f4;
   }
   &.job::before {
-    content: "招聘";
+    content: '招聘';
     background: #9b59b6;
   }
 }
-
