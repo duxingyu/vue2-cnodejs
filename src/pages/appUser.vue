@@ -1,11 +1,14 @@
 <template>
 <!-- 用户页面 -->
-<div class="m-user" :class="{load: !finish}">
+<div class="m-user">
   <app-header :title="`${userId} 的主页`"></app-header>
   <!-- 获取到数据才可以加载 -->
   <div v-if="finish" class="wrap">
     <user-panel :data="userInfo" :count="topicList[2].length"></user-panel>
-    <user-topics :topicNum="num" :topicList="sendList(topicList)"></user-topics>
+    <user-topics
+      :topicNum="num"
+      :userId="userId"
+      :topicList="sendList(topicList)"></user-topics>
   </div>
   <app-utils></app-utils>
   <app-prompt
@@ -16,6 +19,7 @@
 </template>
 
 <script>
+import { Loading } from 'element-ui';
 import { error } from '../assets/utils';
 import appUtils from '../components/appUtils';
 import appHeader from '../components/appHeader';
@@ -50,34 +54,33 @@ export default {
     if (list) {
       this.num = list === 'topics' ? 1 : 2;
     }
-    this.getTopic(this.userId);
+    this.getTopic(this.userId, Loading.service(this.$loadConfig));
   },
   methods: {
     hide() {
       this.prompt = false;
     },
     // 获取用户信息、参与话题、创建话题列表
-    getTopic(userId) {
-      const url = `https://cnodejs.org/api/v1/user/${userId}`;
+    getTopic(userId, load) {
       this.$http
-        .get(url)
+        .get(`user/${userId}`)
         .then(res => {
           this.userInfo = res.data.data;
           // 使用topicList方便调用列表数据
           this.topicList.splice(0);
           this.topicList.push(this.userInfo.recent_replies, this.userInfo.recent_topics);
-          this.getCollect();
+          this.getCollect(load);
         })
         .catch(err => error(err, this));
     },
     // 获取用户收藏列表
-    getCollect() {
-      const url = `https://cnodejs.org/api/v1/topic_collect/${this.userInfo.loginname}`;
+    getCollect(load) {
       this.$http
-        .get(url)
+        .get(`topic_collect/${this.userInfo.loginname}`)
         .then(res => {
           this.topicList.push(res.data.data);
           this.finish = true;
+          load.close();
         })
         .catch(err => error(err, this));
     },
@@ -94,7 +97,7 @@ export default {
       // 当用户id不同时，重新获取数据
       if (to.params.userId !== from.params.userId) {
         this.finish = false;
-        this.getTopic(to.params.userId);
+        this.getTopic(to.params.userId, Loading.service(this.$loadConfig));
       }
     }
     next();
