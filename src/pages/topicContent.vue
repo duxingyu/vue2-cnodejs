@@ -1,11 +1,13 @@
 <template>
+<!-- 话题详情及内容 -->
 <div class="m-topic-ct" v-if="data.title">
+  <!-- 话题详情：作者、标题、时间、是否收藏 -->
   <div class="intro">
     <h2 class="title" :class="getTag(data)">{{ data.title }}</h2>
-    <div class="author clearfix">
+    <div class="author">
       <router-link :to="`/user/${data.author.loginname}`">
         <img
-          :src="data.author.avatar_url" 
+          :src="data.author.avatar_url"
           :alt="data.author.loginname">
       </router-link>
       <div class="desc">
@@ -16,20 +18,23 @@
           <span>评论&nbsp;{{ data.reply_count }}</span>
         </p>
       </div>
-      <p
+      <button
         class="collect"
-        v-if="token" 
-        :class="{cancel: data.is_collect}"
-        @click="changeCollect(data.is_collect)">
-        {{ data.is_collect ? '取消收藏' : '收藏' }}
-      </p>
+        v-if="isAuthor(data.author_id)"
+        @click="editTopic(data)">编辑</button>
+      <button
+        class="collect"
+        v-if="user.token"
+        :class="{'cancel': data.is_collect}"
+        @click="changeCollect(data.is_collect)">{{ data.is_collect ? '取消收藏' : '收藏' }}</button>
     </div>
   </div>
+  <!-- 话题内容 -->
   <div class="body markdown-body" v-html="data.content">
   </div>
-  <app-prompt 
-    :show="prompt" 
-    :text="promptText" 
+  <app-prompt
+    :show="prompt"
+    :text="promptText"
     @close="hide"></app-prompt>
 </div>
 </template>
@@ -50,19 +55,18 @@ export default {
   components: {
     appPrompt,
   },
-  props: ['data', 'token'],
+  props: ['data', 'user'],
   methods: {
+    // 收藏或取消收藏
     changeCollect(state) {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
       this.$http
-        .post(
-          `https://cnodejs.org/api/v1/topic_collect/${state ? 'de_collect' : 'collect'}`,
-          {
-            accesstoken: this.token,
-            topic_id: this.data.id,
-          })
+        .post(`topic_collect/${state ? 'de_collect' : 'collect'}`, {
+          accesstoken: this.user.token,
+          topic_id: this.data.id,
+        })
         .then(() => {
           this.data.is_collect = !state;
           this.send = 'before';
@@ -72,18 +76,32 @@ export default {
           error(err, this);
         });
     },
+    // 话题作者=登录用户
+    isAuthor(id) {
+      return id === this.user.id;
+    },
+    // 编辑话题
+    editTopic(data) {
+      // 重新请求话题，获得未渲染内容，请求成功转到编辑话题页
+      this.$http
+        .get(`topic/${this.data.id}?mdrender=false`)
+        .then(res => {
+          this.$store.store.commit('editTopic', {
+            accesstoken: this.user.token,
+            topic_id: data.id,
+            title: data.title,
+            tab: data.tab,
+            content: res.data.data.content,
+          });
+          this.$router.push('/edit');
+        })
+        .catch(err => error(err, this));
+    },
     hide() {
       this.prompt = false;
     },
     getTime,
     getTag,
-  },
-  watch: {
-    data() {
-      if (this.data.content) {
-        this.$emit('finish');
-      }
-    },
   },
 };
 </script>
@@ -97,58 +115,58 @@ export default {
     padding-bottom: 20px;
   }
   .title {
+    // 多行显示
     font: bold 20px/1.5 $ff;
     padding: 10px 0;
     &::before {
       display: inline-block;
-      height: 24px;
-      margin-right: 5px;
+      margin-right: 6px;
       padding: 0 10px;
       color: #fff;
-      border-radius: 3px;
-      font: normal 14px/24px $ff;
+      border-radius: 4px;
+      line-height: 24px;
+      @include fc(14px, #fff);
       vertical-align: text-bottom;
     }
     @include tag;
   }
   .author {
+    display: flex;
     img {
-      float: left;
       @include wh(40px);
       border-radius: 50%;
     }
     .desc {
-      float: left;
+      flex-grow: 1;
       padding-left: 10px;
       line-height: 20px;
       color: #616161;
       .name {
         font: bold 14px/20px $ff;
-        cursor: pointer;
         color: #000;
         &::before {
           content: '作者';
           margin-right: 10px;
-          @include wh(30px, 14px);
           border: 1px solid $re;
-          border-radius: 3px;
+          border-radius: 4px;
           color: $re;
-          font: normal 12px/14px $ff;
-          text-align: center;
+          @include fl(12px, 14px);
         }
       }
     }
     .collect {
-      float: right;
       height: 34px;
-      margin: 3px 0;
+      align-self: center;
       padding: 10px;
       @include fc(14px, #fff);
-      border-radius: 5px;
+      border-radius: 4px;
+      border: none;
       cursor: pointer;
       background: $re;
+      margin-left: 10px;
       &.cancel {
         background: #bdbdbd;
+        min-width: 80px;
         &:hover {
           background: #424242;
         }
@@ -167,6 +185,9 @@ export default {
   .m-topic-ct {
     margin: 0;
     padding: 0 10px;
+    .intro {
+      padding-bottom: 0;
+    }
     .body img {
       width: 100%;
       margin: 0;

@@ -3,12 +3,19 @@
 <div class="m-usertopics">
   <!-- 用户参与、创建、收藏的话题-->
   <div v-for="(topicItem, index) of (topicNum === 3 ? topic : [topic[topicNum]])" :key="topicItem">
-    <h4 class="u-desc-title">{{ topicItem }}</h4>
+    <h4 class="u-desc-title">
+      {{ topicItem }}
+      <span class="u-list-count">{{topicList[index].length}}</span>
+      <router-link
+        class="other"
+        v-if="topicNum !== 3"
+        :to="`/user/${userId}`">返回用户主页</router-link>
+    </h4>
     <!-- 各项列表 -->
     <ul v-if="topicList[index].length">
       <li v-for="item of sendList(topicList[index])" :key="item.id" class="list">
         <!-- 用户头像，跳转到用户页面 -->
-        <router-link :to="{ name: 'appUser', params: { userId: item.author.loginname } }">
+        <router-link :to="`/user/${item.author.loginname}`">
         <img
           class="avatar"
           :src="item.author.avatar_url"
@@ -17,7 +24,7 @@
         </router-link>
         <!-- 话题 -->
         <router-link
-          :to="{ name: 'appTopic', params: { topicId: item.id } }"
+          :to="`/topic/${item.id}`"
           :title="item.title"
           class="title ellipsis">{{item.title}}</router-link>
         <!-- 上次回复时间 -->
@@ -42,12 +49,12 @@ export default {
       topic: ['最近参与的话题', '最近创建的话题', '我的收藏'],
     };
   },
-  props: ['topicNum', 'topicList'],
+  props: ['topicNum', 'topicList', 'userId'],
   methods: {
-    // 用户主页只显示5条话题
     sendList(list) {
       return this.topicNum === 3 ? list.slice(0, 5) : list;
     },
+    // 用户主页只显示5条话题
     getMore(list) {
       return list.length > 5 && this.topicNum === 3;
     },
@@ -100,7 +107,7 @@ export default {
   }
   .more {
     padding-left: 10px;
-    font: 14px/40px $ff;
+    @include fl(14px, 40px);
     margin-bottom: -20px;
     a {
       color: $re;
