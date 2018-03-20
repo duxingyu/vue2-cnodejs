@@ -1,11 +1,9 @@
 <template>
 <!-- 用户消息页面 -->
-<div class="m-message" :class="{load: !finish}">
+<div class="m-message">
   <app-header title="个人消息"></app-header>
   <!-- 获取到数据才可以加载 -->
   <div v-if="finish" class="wrap">
-    <!-- $$ 使用vuex保存用户收藏数 -->
-    <!-- <user-panel :data="userInfo" :count="10"></user-panel> -->
     <div class="m-usermes">
       <!-- 用户新消息、过往消息 -->
       <div v-for="(item, index) of mesItem" :key="item">
@@ -15,7 +13,7 @@
           <span class="u-list-count">{{mesList[index].length}}</span>
           <!-- 标记全部已读 -->
           <button
-            class="mark-all"
+            class="other"
             v-if="index === 0"
             :disabled="mesList[0].length === 0"
             :class="{'mark-not' : mesList[0].length === 0}"
@@ -26,9 +24,9 @@
           <li v-for="mes of changeContent(mesList[index])" :key="mes.id" class="list">
             <!-- title 包括消息用户、时间、类型、标题 -->
             <p class="title">
-              <router-link :to="{ name: 'appUser', params: { userId: mes.author.loginname } }">
+              <router-link :to="`/user/${mes.author.loginname}`">
                 {{ mes.author.loginname }}
-              </router-link>于<span>{{getTime(mes.reply.create_at)}}</span>&nbsp;在&nbsp;<router-link :to="{ name: 'appTopic', params: { topicId: mes.topic.id }, hash: `#a${mes.reply.id}` }" @click.native.prevent="markOne(mes, index)">{{ mes.topic.title }}
+              </router-link>于<span>{{getTime(mes.reply.create_at)}}</span>&nbsp;在&nbsp;<router-link :to="`/topic/${mes.topic.id}#a${mes.reply.id}`" @click.native.prevent="markOne(mes, index)">{{ mes.topic.title }}
               </router-link>&nbsp;中{{mesType[mes.type]}}了你：
             </p>
             <!-- 消息内容 -->
@@ -58,6 +56,7 @@
 </template>
 
 <script>
+import { Loading } from 'element-ui';
 import { error, getTime } from '../assets/utils';
 import appUtils from '../components/appUtils';
 import appHeader from '../components/appHeader';
@@ -70,7 +69,6 @@ export default {
   data() {
     return {
       mesItem: ['新消息', '过往消息'],
-      finish: false,
       mesList: [],
       mesType: {
         reply: '回复',
@@ -79,6 +77,7 @@ export default {
       token: '',
       prompt: false,
       promptText: '',
+      finish: false,
     };
   },
   props: ['userId'],
@@ -89,14 +88,14 @@ export default {
     userPanel,
     userTopics,
   },
+  // 用户未登录跳转到登录页
   created() {
-    const user = this.$store.store.state.user;
-
-    if (!user) {
-      this.$router.replace('/login');
+    const token = this.$store.store.state.user.token;
+    if (!token) {
+      this.$router.push('/login');
     } else {
-      this.token = user.token;
-      this.getMessage();
+      this.token = this.$store.store.state.user.token;
+      this.getMessage(Loading.service(this.$loadConfig));
     }
   },
   methods: {
@@ -104,19 +103,16 @@ export default {
       this.prompt = false;
     },
     // 获取信息，加入当前页为第一页
-    getMessage() {
+    getMessage(load) {
       this.$http
-        .get('https://cnodejs.org/api/v1/messages', {
-          params: {
-            accesstoken: this.token,
-          },
-        })
+        .get(`messages?accesstoken=${this.token}`)
         .then(res => {
           const data = res.data.data;
           this.mesList.push(data.hasnot_read_messages, data.has_read_messages);
           this.$set(this.mesList[0], 'crtPage', 1);
           this.$set(this.mesList[1], 'crtPage', 1);
           this.finish = true;
+          load.close();
         })
         .catch(err => error(err, this));
     },
@@ -132,23 +128,26 @@ export default {
     markOne(mes, index) {
       if (index === 0) {
         this.$http
-          .post(`https://cnodejs.org/api/v1/message/mark_one/${mes.id}`, {
+          .post(`message/mark_one/${mes.id}`, {
             accesstoken: this.token,
           })
-          .then(() => {})
+          .then(() => {
+            this.$store.store.commit('setCount', -1);
+          })
           .catch(err => error(err, this));
       }
-      this.$router.push({ name: 'appTopic', params: { topicId: mes.topic.id }, hash: `#a${mes.reply.id}` });
+      this.$router.push(`/topic/${mes.topic.id}#a${mes.reply.id}`);
     },
-    // 标记全部已读,但按钮disabled时，click事件不会触发
+    // 标记全部已读,当按钮disabled时，click事件不会触发
     markAll() {
       this.$http
-        .post('https://cnodejs.org/api/v1/message/mark_all', {
+        .post('message/mark_all', {
           accesstoken: this.token,
         })
         .then(() => {
           // 将新消息移到过往消息中
-          this.mesList[1].unshift(...this.mesList[0].reverse());
+          this.$store.store.commit('setCount', -this.mesList[0].length);
+          this.mesList[1].unshift(...this.mesList[0]);
           this.mesList[0].splice(0);
         })
         .catch(err => error(err, this));
@@ -207,25 +206,11 @@ export default {
     display: flex;
     justify-content: center;
   }
-  .mark-all {
-    float: right;
-    margin: 8px;
-    padding: 0 10px;
-    @include fc(14px, #fff);
-    line-height: 24px;
-    border-radius: 5px;
-    cursor: pointer;
-    background: $re;
-    border: none;
-    &.mark-not {
-      background: #bdbdbd;
-      cursor: not-allowed;
-      &:hover {
-        background: #bdbdbd;
-      }
-    }
+  .mark-not {
+    background: #bdbdbd;
+    cursor: not-allowed;
     &:hover {
-      background: #dd2c00;
+      background: #bdbdbd;
     }
   }
 }

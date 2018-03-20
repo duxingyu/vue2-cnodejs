@@ -12,7 +12,7 @@
   <p class="tip">
     <span>提示：</span>
     如果没有accesstoken，可以点击
-    <a @click.prevent="post(defaultToken)">这里</a>
+    <a @click.prevent="post(getDefaultToken)">这里</a>
     进行登录。
   </p>
   <app-prompt
@@ -32,7 +32,6 @@ export default {
   data() {
     return {
       token: '',
-      defaultToken: 'aabc3938-ad2f-40c4-aa7c-d4f36181b62a',
       prompt: false,
       promptText: '',
     };
@@ -44,7 +43,7 @@ export default {
   created() {
     // 当用户已经登录，跳转到用户信息页面
     const user = this.$store.store.state.user;
-    if (user) {
+    if (user.token) {
       this.$router.replace(`/user/${user.loginname}`);
     }
   },
@@ -56,19 +55,14 @@ export default {
       },
     },
   },
+  computed: {
+    getDefaultToken() {
+      return this.$store.store.state.defaultToken;
+    },
+  },
   methods: {
     hide() {
       this.prompt = false;
-    },
-    setUser(userInfo) {
-      this.$store.store.commit('setUser', userInfo);
-
-      // 如果使用的是defaultToken，选择sessionStorage，否则为localStorage
-      const storage = window[userInfo.token === this.defaultToken ? 'sessionStorage' : 'localStorage'];
-      if (storage) {
-        storage.setItem('user', JSON.stringify(userInfo));
-      }
-      this.$router.go(-1);
     },
     post(accesstoken) {
       const token = accesstoken.trim();
@@ -78,16 +72,35 @@ export default {
         return;
       }
       this.$http
-        .post('https://cnodejs.org/api/v1/accesstoken', { accesstoken: token })
+        .post('accesstoken', { accesstoken: token })
         .then(res => {
           const data = res.data;
           const user = {
             token,
             loginname: data.loginname,
             id: data.id,
-            avatar_url: data.avatar_url,
+            avatar: data.avatar_url,
           };
+          this.getMesCount(token);
           this.setUser(user);
+        })
+        .catch(err => error(err, this));
+    },
+    setUser(userInfo) {
+      this.$store.store.commit('setUser', userInfo);
+
+      // 非临时用户使用localStorage存储
+      const storage = window.localStorage;
+      if (storage && (userInfo.token !== this.getDefaultToken)) {
+        storage.setItem('user', JSON.stringify(userInfo));
+      }
+      this.$router.go(-1);
+    },
+    getMesCount(token) {
+      this.$http
+        .get(`message/count?accesstoken=${token}`)
+        .then(res => {
+          this.$store.store.commit('setCount', res.data.data);
         })
         .catch(err => error(err, this));
     },
@@ -103,7 +116,7 @@ export default {
   input {
     border: none;
     width: 100%;
-    font: 18px/50px $ff;
+    @include fl(18px, 50px);
     border-bottom: 2px solid $re;
     margin-bottom: 30px;
     caret-color: $re;
@@ -116,14 +129,14 @@ export default {
     border-right: 2px solid #d32f2f;
     border-bottom: 3px solid #d32f2f;
     border-radius: 5px;
-    font: 20px/2 $ff;
+    @include fl(20px, 2);
     letter-spacing: 8px;
     &:hover {
       opacity: 0.9;
     }
   }
   .tip {
-    font: 16px/24px $ff;
+    @include fl(16px, 24px);
     margin-top: 20px;
     a {
       color: $re;
@@ -137,7 +150,7 @@ export default {
     }
   }
 }
-@media all and (max-width: 800px) {
+@media all and (max-width: 600px) {
   .m-login {
     margin: 10px;
     input {

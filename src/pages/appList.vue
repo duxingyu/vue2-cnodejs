@@ -7,7 +7,7 @@
       <!-- 文章标题 -->
       <h3 class="title ellipsis">
         <router-link
-          :to="{ name: 'appTopic', params: { topicId: article.id } }"
+          :to="`/topic/${article.id}`"
           :class="getTag(article, crtTag)"
           :title="article.title">
           {{ article.title }}</router-link>
@@ -17,7 +17,7 @@
         <!-- 文章基础信息 -->
         <router-link
           class="basic"
-          :to="{ name: 'appUser', params: { userId: article.author.loginname } }">
+          :to="`/user/${article.author.loginname}`">
           <!-- 用户头像 -->
           <img
             :src="article.author.avatar_url"
@@ -36,7 +36,9 @@
         </div>
       </div>
     </li>
-    <infinite-loading @infinite="getList"></infinite-loading>
+    <infinite-loading
+      v-if="articleList.length"
+      @infinite="getList"></infinite-loading>
   </ul>
   <app-utils></app-utils>
   <app-prompt
@@ -47,6 +49,7 @@
 </template>
 
 <script>
+import { Loading } from 'element-ui';
 import InfiniteLoading from 'vue-infinite-loading';
 import appHeader from '../components/appHeader';
 import appUtils from '../components/appUtils';
@@ -84,13 +87,14 @@ export default {
     const tab = this.$route.query.tab;
     this.lastTag = tab || 'home';
     this.crtTag = this.lastTag;
+    this.getList(null, Loading.service(this.$loadConfig));
   },
   methods: {
     hide() {
       this.prompt = false;
     },
     // $state为vue-infinite-loading插件参数
-    getList($state) {
+    getList($state, load) {
       // 保证向下滚动获取到数据前不会再发送请求，除非请求成功
       if (this.send === 'loading') return;
       this.send = 'loading';
@@ -105,16 +109,14 @@ export default {
       const tab = this.crtTag === 'home' ? '' : `&tab=${this.crtTag}`;
 
       // 一次获取20篇文章信息
-      const url = `https://cnodejs.org/api/v1/topics?page=${this.page}&limit=20${tab}`;
       this.$http
-        .get(url)
+        .get(`topics?page=${this.page}&limit=20${tab}`)
         .then(res => {
           this.articleList.push(...res.data.data);
           ++this.page;
           this.send = 'finish';
-          if (this.page > 2) {
-            $state.loaded();
-          }
+          if (this.page > 2) $state.loaded();
+          if (load) load.close();
         })
         .catch(err => {
           this.send = 'finish';
@@ -130,7 +132,7 @@ export default {
 
     // this.crtTag, this.lastTag均为home时不调用
     if (this.crtTag !== this.lastTag) {
-      this.getList();
+      this.getList(null, Loading.service(this.$loadConfig));
     }
     next();
   },
@@ -146,7 +148,6 @@ export default {
   .article {
     padding: 10px 20px;
     border-bottom: 1px solid #ccc;
-    background: #fff;
     height: 90px;
   }
   .title {
@@ -155,7 +156,7 @@ export default {
       @include tag;
       &::before {
         width: 40px;
-        font: normal 12px/20px $ff;
+        @include fl(12px, 20px);
         display: inline-block;
         margin: 2px 5px 2px 0;
         text-align: center;
@@ -187,7 +188,7 @@ export default {
     }
   }
   .other {
-    font: 12px/20px $ff;
+    @include fl(12px, 20px);
     flex-grow: 1;
     text-align: right;
     .reply {
@@ -202,7 +203,7 @@ export default {
     }
   }
 }
-@media all and (max-width: 500px) {
+@media all and (max-width: 600px) {
   .m-list {
     .item {
       padding: 10px;
