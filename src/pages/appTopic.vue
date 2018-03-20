@@ -104,7 +104,7 @@ export default {
         accesstoken: this.user.token,
         content: `${content}
         
-来自 [vue2-cnodejs](https://duxy1995.coding.me/)`,
+来自 [vue2-cnodejs](https://duxingyu.github.io)`,
       };
       this.$http
         .post(`topic/${this.topicId}/replies`, data)
