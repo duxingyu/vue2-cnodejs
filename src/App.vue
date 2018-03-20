@@ -1,13 +1,8 @@
 <template>
-<div 
-  id="app" 
-  @click="toggleBar(true)">
-  <app-bar 
-    :show="bar" 
-    @hide="toggleBar"></app-bar>
+<div id="app" @click="toggleBar(true)">
+  <app-bar :show="bar" @hide="toggleBar"></app-bar>
   <!--内容区-->
-  <div 
-    class="g-ct">
+  <div class="g-ct">
     <router-view></router-view>
   </div>
 </div>
@@ -44,10 +39,10 @@ export default {
 <style>
 #app {
   position: relative;
-  height: 100%;
+  min-height: 100vh;
+  min-width: 250px;
 }
 .g-ct {
   margin-top: 64px;
-  width: 100%;
 }
 </style>

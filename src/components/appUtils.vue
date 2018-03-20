@@ -21,21 +21,21 @@ export default {
   name: 'appUtils',
   data() {
     return {
-      user: null,
+      token: '',
       pos: false,
       w: window,
     };
   },
   created() {
-    this.user = this.$store.store.state.user;
+    this.token = this.$store.store.state.user.token;
     this.w.addEventListener('scroll', this.scroll);
   },
   methods: {
     edit() {
       // 如果未登录，登录后会跳转到发表主题页
-      this.$router.push({ name: 'newTopic' });
-      if (!this.user) {
-        this.$router.push({ name: 'appLogin' });
+      this.$router.push('/create');
+      if (!this.token) {
+        this.$router.push('/login');
       }
     },
     scroll() {

@@ -9,6 +9,7 @@
 </template>
 
 <script>
+// 思考怎么样改变父组件的show
 export default {
   name: 'appPrompt',
   // 错误提示文本，显示

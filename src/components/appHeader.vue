@@ -27,7 +27,7 @@ $h: 64px;
 
 .u-header {
   position: fixed;
-  z-index: 100;
+  z-index: 3000;
   top: 0;
   left: 0;
   width: 100%;
@@ -54,7 +54,7 @@ $h: 64px;
     color: #fff;
   }
 }
-@media all and (max-width: 500px) {
+@media all and (max-width: 600px) {
   .u-header .logo img {
     display: none;
   }

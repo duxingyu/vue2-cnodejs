@@ -20,6 +20,7 @@
         <router-link :to="item.router">
         <i class="material-icons">{{item.icon}}</i>
         {{ item.text }}
+        <span class="u-list-count" v-if="(item.icon === 'message') && (count !== 0)">{{ count }}</span>
         </router-link>
       </li>
     </ul>
@@ -41,6 +42,7 @@ export default {
         { text: '分享', router: '/?tab=share', icon: 'share' },
         { text: '问答', router: '/?tab=ask', icon: 'help' },
         { text: '招聘', router: '/?tab=job', icon: 'contact_mail' },
+        { text: '消息', router: '/my/messages', icon: 'message' },
         { text: '关于', router: '/about', icon: 'info' },
       ],
     };
@@ -50,6 +52,11 @@ export default {
   },
   // 侧边栏显示或隐藏
   props: ['show'],
+  computed: {
+    count() {
+      return this.$store.store.state.mesCount;
+    },
+  },
   methods: {
     toggle() {
       // 点击后隐藏侧边栏
@@ -64,7 +71,7 @@ export default {
 
 .g-bar {
   position: relative;
-  z-index: 200;
+  z-index: 4000;
   .menu {
     position: fixed;
     top: 0;
@@ -115,7 +122,6 @@ export default {
       color: $bl;
       font: bold 16px/3 $ff;
       padding-left: 24px;
-      cursor: pointer;
     }
     i {
       font-size: 20px;

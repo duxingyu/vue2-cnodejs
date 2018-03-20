@@ -2,14 +2,14 @@
 <!-- 侧边导航栏上方用户简要信息组件 -->
 <div class="m-nav-log">
   <!-- 登录状态 -->
-  <div class="in" v-if="user">
+  <div class="in" v-if="getName">
     <!-- 用户头像，点击后进入用户页 -->
     <div class="head">
-      <router-link :to="{ name: 'appUser', params: { userId: user.loginname } }">
-        <img :src="user.avatar_url" :alt="user.loginname">
+      <router-link :to="`/user/${getName}`">
+        <img :src="getAvatar" :alt="getName">
       </router-link>
       <!-- 用户名 -->
-      <p class="name">{{user.loginname}}</p>
+      <p class="name">{{getName}}</p>
     </div>
     <!-- 退出登录按钮 -->
     <div class="exit" @click="exitLogin">
@@ -18,7 +18,7 @@
   </div>
   <!-- 未登录状态，点击进入登录页 -->
   <div class="out" v-else>
-    <router-link to="{ name: 'appLogin' }">
+    <router-link to="/login">
       <i class="material-icons">account_circle</i>
     </router-link>
   </div>
@@ -28,33 +28,29 @@
 <script>
 export default {
   name: 'appSelf',
-  data() {
-    return {
-      user: null,
-    };
-  },
-  created() {
-    this.isLogin();
+  computed: {
+    // 获取用户名
+    getName() {
+      return this.$store.store.state.user.loginname;
+    },
+    // 获取用户头像
+    getAvatar() {
+      return this.$store.store.state.user.avatar;
+    },
   },
   methods: {
-    isLogin() {
-      this.user = this.$store.store.state.user;
-    },
+    // 退出登录，如果localStorage存在，则删除数据
     exitLogin() {
-      this.$store.store.commit('setUser', null);
-      this.isLogin();
+      this.$store.store.commit('setUser', {
+        id: '',
+        loginname: '',
+        avatar: '',
+        token: null,
+      });
 
       const storage = window.localStorage;
       if (storage.user) {
         storage.removeItem('user');
-      }
-    },
-  },
-  // $$
-  watch: {
-    $route(to, from) {
-      if (from.path === '/login') {
-        this.isLogin();
       }
     },
   },
@@ -79,7 +75,7 @@ export default {
   }
   .name {
     color: #fff;
-    font: 16px/30px $ff;
+    @include fl(16px, 30px);
   }
   .exit {
     position: absolute;

@@ -1,3 +1,4 @@
+// 格式化时间显示
 function getTime(time, format) {
   if (format) {
     return time.split(/T|\..+/, 2).join(' ');
@@ -22,6 +23,7 @@ function getTime(time, format) {
   return `${Math.floor(years)} 年前`;
 }
 
+// 获取标签
 function getTag(item, crt) {
   if (item.top) {
     return 'top';
@@ -31,15 +33,12 @@ function getTag(item, crt) {
   return item.good ? 'good' : item.tab;
 }
 
-function error(err, that) {
+// 错误处理函数
+function error(err, _this) {
   if (err.response) {
-    that.promptText = err.response.data.error_msg;
-    that.prompt = true;
+    _this.promptText = err.response.data.error_msg;
+    _this.prompt = true;
   }
 }
 
-export {
-  getTime,
-  getTag,
-  error,
-};
+export { getTime, getTag, error };
