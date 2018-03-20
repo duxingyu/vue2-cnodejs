@@ -6,6 +6,7 @@ import appUser from '@/pages/appUser';
 import appLogin from '@/pages/appLogin';
 import newTopic from '@/pages/newTopic';
 import about from '@/pages/about';
+import appMessage from '@/pages/appMessage';
 
 Vue.use(Router);
 
@@ -20,9 +21,10 @@ export default new Router({
       alias: '/?tab=home',
     },
     {
-      path: '/topic/:id',
+      path: '/topic/:topicId',
       name: 'appTopic',
       component: appTopic,
+      props: true,
     },
     {
       path: '/login',
@@ -30,9 +32,22 @@ export default new Router({
       component: appLogin,
     },
     {
-      path: '/user/:id',
+      path: '/user/:userId',
       name: 'appUser',
       component: appUser,
+      props: true,
+      children: [
+        {
+          path: ':list',
+          name: 'appUserList',
+          component: appUser,
+        },
+      ],
+    },
+    {
+      path: '/my/messages',
+      name: 'appMessage',
+      component: appMessage,
     },
     {
       path: '/create',
@@ -40,15 +55,37 @@ export default new Router({
       component: newTopic,
     },
     {
+      path: '/edit',
+      name: 'editTopic',
+      component: newTopic,
+    },
+    {
       path: '/about',
       name: 'about',
       component: about,
     },
+    {
+      path: '*',
+      component: appList,
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
+    const position = {};
+    if (to.hash && to.path !== from.path) {
+      position.selector = to.hash;
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(position);
+        }, 1500);
+      });
+    }
     if (savedPosition) {
       return savedPosition;
     }
-    return { x: 0, y: 0 };
+    if (to.matched.some(m => m.meta.scrollToTop)) {
+      position.x = 0;
+      position.y = 0;
+      return position;
+    }
   },
 });
