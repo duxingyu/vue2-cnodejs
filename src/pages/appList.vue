@@ -55,6 +55,7 @@ import appHeader from '../components/appHeader';
 import appUtils from '../components/appUtils';
 import appPrompt from '../components/appPrompt';
 import { getTime, getTag, error } from '../assets/utils';
+import api from '../assets/api';
 
 export default {
   name: 'appList',
@@ -106,11 +107,10 @@ export default {
         // 清空文章列表
         this.articleList.splice(0);
       }
-      const tab = this.crtTag === 'home' ? '' : `&tab=${this.crtTag}`;
+      const tab = this.crtTag === 'home' ? '' : this.crtTag;
 
       // 一次获取20篇文章信息
-      this.$http
-        .get(`topics?page=${this.page}&limit=20${tab}`)
+      api.topicList(this.page, tab)
         .then(res => {
           this.articleList.push(...res.data.data);
           ++this.page;

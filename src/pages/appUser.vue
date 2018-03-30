@@ -26,6 +26,7 @@ import appHeader from '../components/appHeader';
 import appPrompt from '../components/appPrompt';
 import userPanel from './userPanel';
 import userTopics from './userTopics';
+import api from '../assets/api';
 
 export default {
   name: 'appUser',
@@ -54,16 +55,15 @@ export default {
     if (list) {
       this.num = list === 'topics' ? 1 : 2;
     }
-    this.getTopic(this.userId, Loading.service(this.$loadConfig));
+    this.getUserInfo(this.userId, Loading.service(this.$loadConfig));
   },
   methods: {
     hide() {
       this.prompt = false;
     },
     // 获取用户信息、参与话题、创建话题列表
-    getTopic(userId, load) {
-      this.$http
-        .get(`user/${userId}`)
+    getUserInfo(userId, load) {
+      api.userInfo(userId)
         .then(res => {
           this.userInfo = res.data.data;
           // 使用topicList方便调用列表数据
@@ -75,8 +75,7 @@ export default {
     },
     // 获取用户收藏列表
     getCollect(load) {
-      this.$http
-        .get(`topic_collect/${this.userInfo.loginname}`)
+      api.userCollect(this.userInfo.loginname)
         .then(res => {
           this.topicList.push(res.data.data);
           this.finish = true;
@@ -97,7 +96,7 @@ export default {
       // 当用户id不同时，重新获取数据
       if (to.params.userId !== from.params.userId) {
         this.finish = false;
-        this.getTopic(to.params.userId, Loading.service(this.$loadConfig));
+        this.getUserInfo(to.params.userId, Loading.service(this.$loadConfig));
       }
     }
     next();

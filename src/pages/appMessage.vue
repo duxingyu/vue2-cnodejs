@@ -63,6 +63,7 @@ import appHeader from '../components/appHeader';
 import appPrompt from '../components/appPrompt';
 import userPanel from './userPanel';
 import userTopics from './userTopics';
+import api from '../assets/api';
 
 export default {
   name: 'appUser',
@@ -104,8 +105,7 @@ export default {
     },
     // 获取信息，加入当前页为第一页
     getMessage(load) {
-      this.$http
-        .get(`messages?accesstoken=${this.token}`)
+      api.userMessage(this.token)
         .then(res => {
           const data = res.data.data;
           this.mesList.push(data.hasnot_read_messages, data.has_read_messages);
@@ -127,10 +127,7 @@ export default {
     // 标记单个已读：当点击话题名时标记已读并跳转
     markOne(mes, index) {
       if (index === 0) {
-        this.$http
-          .post(`message/mark_one/${mes.id}`, {
-            accesstoken: this.token,
-          })
+        api.markOne(mes.id, {accesstoken: this.token})
           .then(() => {
             this.$store.store.commit('setCount', -1);
           })
@@ -140,10 +137,7 @@ export default {
     },
     // 标记全部已读,当按钮disabled时，click事件不会触发
     markAll() {
-      this.$http
-        .post('message/mark_all', {
-          accesstoken: this.token,
-        })
+      api.markAll(this.token)
         .then(() => {
           // 将新消息移到过往消息中
           this.$store.store.commit('setCount', -this.mesList[0].length);

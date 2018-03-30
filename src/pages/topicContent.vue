@@ -21,7 +21,7 @@
       <button
         class="collect"
         v-if="isAuthor(data.author_id)"
-        @click="editTopic(data)">编辑</button>
+        @click="topicEdit(data)">编辑</button>
       <button
         class="collect"
         v-if="user.token"
@@ -41,6 +41,7 @@
 
 <script>
 import { getTime, getTag, error } from '../assets/utils';
+import api from '../assets/api';
 import appPrompt from '../components/appPrompt';
 
 export default {
@@ -62,8 +63,8 @@ export default {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
-      this.$http
-        .post(`topic_collect/${state ? 'de_collect' : 'collect'}`, {
+      api
+        .topicCollect(state, {
           accesstoken: this.user.token,
           topic_id: this.data.id,
         })
@@ -81,12 +82,12 @@ export default {
       return id === this.user.id;
     },
     // 编辑话题
-    editTopic(data) {
+    topicEdit(data) {
       // 重新请求话题，获得未渲染内容，请求成功转到编辑话题页
-      this.$http
-        .get(`topic/${this.data.id}?mdrender=false`)
+      api
+        .topicInfo(this.data.id, { mdrender: false })
         .then(res => {
-          this.$store.store.commit('editTopic', {
+          this.$store.store.commit('topicEdit', {
             accesstoken: this.user.token,
             topic_id: data.id,
             title: data.title,

@@ -16,7 +16,7 @@
   <app-publish
     v-if="user.token && finish"
     btnText="提交"
-    @reply="subReply"></app-publish>
+    @reply="topicReply"></app-publish>
   <app-utils></app-utils>
   <app-prompt
     :show="prompt"
@@ -34,6 +34,7 @@ import appPublish from '../components/appPublish';
 import topicContent from './topicContent';
 import topicComment from './topicComment';
 import { error } from '../assets/utils';
+import api from '../assets/api';
 
 export default {
   name: 'apptopic',
@@ -66,10 +67,8 @@ export default {
     },
     // 获取话题数据
     getData(load) {
-      let url = this.topicId;
-      url = this.user ? `${url}?accesstoken=${this.user.token}` : url;
-      this.$http
-        .get(`topic/${url}`)
+      api
+        .topicInfo(this.topicId, {accesstoken: this.user.token})
         .then(res => {
           const data = res.data.data;
           if (!this.data.id) {
@@ -96,18 +95,18 @@ export default {
         })
         .catch(err => error(err, this));
     },
-    subReply(content) {
+    topicReply(content) {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
-      const data = {
-        accesstoken: this.user.token,
-        content: `${content}
+      const crt = `${content}
         
-来自 [vue2-cnodejs](https://duxingyu.github.io)`,
-      };
-      this.$http
-        .post(`topic/${this.topicId}/replies`, data)
+来自 [vue2-cnodejs](https://duxingyu.github.io)`;
+      api
+        .topicReply(this.topicId, {
+          accesstoken: this.user.token,
+          content: crt,
+        })
         .then(() => {
           this.getData();
           this.send = 'before';

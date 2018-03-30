@@ -27,7 +27,7 @@
           <i
             class="material-icons"
             :class="{ups: isUps(val.ups)}"
-            @click="ups(val, index)">thumb_up</i>
+            @click="commentUps(val, index)">thumb_up</i>
           {{ val.ups.length || '' }}
           <i
             class="material-icons"
@@ -43,7 +43,7 @@
           :index="index"
           :small="true"
           btnText="提交"
-          @reply="subReply"></app-publish>
+          @reply="commentReply"></app-publish>
       </div>
     </li>
   </ol>
@@ -58,6 +58,7 @@
 import { getTime, error } from '../assets/utils';
 import appPrompt from '../components/appPrompt';
 import appPublish from '../components/appPublish';
+import api from '../assets/api';
 
 export default {
   name: 'topicComment',
@@ -97,7 +98,7 @@ export default {
       return this.user.token ? val.includes(this.user.id) : false;
     },
     // 点赞或取消点赞
-    ups(val) {
+    commentUps(val) {
       // 用户未登录跳转到登录页
       if (!this.user.token) {
         this.$router.push('/login');
@@ -109,10 +110,7 @@ export default {
         return;
       }
 
-      this.$http
-        .post(`reply/${val.id}/ups`, {
-          accesstoken: this.user.token,
-        })
+      api.commentUps(val.id, {accesstoken: this.user.token})
         .then(res => (res.data.action === 'up' ? val.ups.push(this.user.id) : val.ups.pop()))
         .catch(err => error(err, this));
     },
@@ -128,7 +126,7 @@ export default {
       this.data.replies[index].show = !val.show;
     },
     // 回复
-    subReply(content, i) {
+    commentReply(content, i) {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
@@ -142,12 +140,11 @@ export default {
 
 来自 [vue2-cnodejs](https://duxingyu.github.io)`;
 
-      this.$http
-        .post(`topic/${this.data.id}/replies`, {
-          accesstoken: this.user.token,
-          content: replyContent,
-          reply_id: this.data.replies[i].id,
-        })
+      api.topicReply(this.data.id, {
+        accesstoken: this.user.token,
+        content: replyContent,
+        reply_id: this.data.replies[i].id,
+      })
         .then(() => {
           // 回复成功后收回回复框
           this.data.replies[i].show = false;

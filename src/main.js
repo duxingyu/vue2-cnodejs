@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import axios from 'axios';
 import { Pagination, Select, Option } from 'element-ui';
 import router from './router/router';
 import store from './store/index';
@@ -11,8 +10,6 @@ import './assets/css/common.css';
 import './assets/css/github-markdown.css';
 import './assets/el.scss';
 
-axios.defaults.baseURL = 'https://cnodejs.org/api/v1/';
-Vue.prototype.$http = axios;
 // element-ui的Loading组件配置
 Vue.prototype.$loadConfig = {
   target: '#app',

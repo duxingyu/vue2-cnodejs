@@ -20,7 +20,7 @@
   <app-publish
     btnText="发布"
     :at="data.content"
-    @reply="addArticle"></app-publish>
+    @reply="topicEdit"></app-publish>
   <app-prompt
     :show="prompt"
     :text="promptText"
@@ -33,6 +33,7 @@ import appHeader from '../components/appHeader';
 import appPublish from '../components/appPublish';
 import appPrompt from '../components/appPrompt';
 import { error } from '../assets/utils';
+import api from '../assets/api';
 
 export default {
   name: 'newTopic',
@@ -86,13 +87,13 @@ export default {
   },
   methods: {
     // 新建话题、编辑话题
-    addArticle(content) {
+    topicEdit(content) {
       if (this.send === 'loading') return;
       this.send = 'loading';
 
       this.data.content = content;
-      this.$http
-        .post(`topics${this.type === 'edit' ? '/update' : ''}`, this.data)
+      api
+        .topicEdit(this.type, this.data)
         .then(res => {
           // 转到话题页面
           this.$router.push(`/topic/${res.data.topic_id}`);

@@ -6,13 +6,13 @@
     type="text"
     v-focus
     placeholder="请输入36位 accesstoken"
-    @keyup.enter="post(token)"
+    @keyup.enter="login(token)"
     v-model="token">
-  <button type="button" class="submit" @click="post(token)">提交</button>
+  <button type="button" class="submit" @click="login(token)">提交</button>
   <p class="tip">
     <span>提示：</span>
     如果没有accesstoken，可以点击
-    <a @click.prevent="post(getDefaultToken)">这里</a>
+    <a @click.prevent="login(getDefaultToken)">这里</a>
     进行登录。
   </p>
   <app-prompt
@@ -26,6 +26,7 @@
 import { error } from '../assets/utils';
 import appHeader from '../components/appHeader';
 import appPrompt from '../components/appPrompt';
+import api from '../assets/api';
 
 export default {
   name: 'loginPage',
@@ -64,15 +65,14 @@ export default {
     hide() {
       this.prompt = false;
     },
-    post(accesstoken) {
+    login(accesstoken) {
       const token = accesstoken.trim();
       if (token.length !== 36) {
         this.promptText = '请输入36位 accesstoken';
         this.prompt = true;
         return;
       }
-      this.$http
-        .post('accesstoken', { accesstoken: token })
+      api.userLogin(accesstoken)
         .then(res => {
           const data = res.data;
           const user = {
@@ -97,8 +97,7 @@ export default {
       this.$router.go(-1);
     },
     getMesCount(token) {
-      this.$http
-        .get(`message/count?accesstoken=${token}`)
+      api.userMesCount(token)
         .then(res => {
           this.$store.store.commit('setCount', res.data.data);
         })

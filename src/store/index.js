@@ -34,7 +34,7 @@ const store = new Vuex.Store({
     setCount(state, data) {
       state.mesCount += data;
     },
-    editTopic(state, data) {
+    topicEdit(state, data) {
       Object.keys(data).forEach(val => {
         state.topicMes[val] = data[val];
       });

@@ -56,7 +56,7 @@ export default new Router({
     },
     {
       path: '/edit',
-      name: 'editTopic',
+      name: 'topicEdit',
       component: newTopic,
     },
     {
@@ -71,14 +71,7 @@ export default new Router({
   ],
   scrollBehavior(to, from, savedPosition) {
     const position = {};
-    if (to.hash && to.path !== from.path) {
-      position.selector = to.hash;
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(position);
-        }, 1500);
-      });
-    }
+
     if (savedPosition) {
       return savedPosition;
     }
