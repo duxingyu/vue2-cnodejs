@@ -18,6 +18,7 @@ export default {
       bar: false,
     };
   },
+
   created() {
     // 如果localStorage中存在用户数据则获取
     const storage = window.localStorage;
